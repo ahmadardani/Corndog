@@ -1,0 +1,20 @@
+# NetBeans files
+nbproject/private/
+build/
+dist/
+
+# Compiled class file
+*.class
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE settings (optional)
+*.iml
+.idea/
+*.ipr
+*.iws
