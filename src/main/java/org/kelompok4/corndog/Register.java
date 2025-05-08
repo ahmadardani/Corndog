@@ -198,7 +198,10 @@ public class Register extends javax.swing.JFrame {
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, username);
             pst.setString(2, email);
-            pst.setString(3, password); // NOTE: sebaiknya pakai hash, ini contoh sederhana
+
+            // HASH password dulu sebelum disimpan
+            String hashedPassword = PasswordUtil.hashPassword(password);
+            pst.setString(3, hashedPassword);
 
             pst.executeUpdate();
             JOptionPane.showMessageDialog(this, "Registrasi berhasil!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -209,7 +212,7 @@ public class Register extends javax.swing.JFrame {
             pwdPassword.setText("");
             pwdRepeatPassword.setText("");
 
-        } catch (SQLException e) {
+            } catch (SQLException e) {
             if (e.getMessage().contains("Duplicate")) {
                 JOptionPane.showMessageDialog(this, "Username atau Email sudah digunakan.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
