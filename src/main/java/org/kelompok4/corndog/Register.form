@@ -109,8 +109,8 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="txtUsername" min="-2" pref="165" max="-2" attributes="0"/>
                       <Component id="txtEmail" min="-2" pref="165" max="-2" attributes="0"/>
-                      <Component id="txtPassword" alignment="0" min="-2" pref="165" max="-2" attributes="0"/>
-                      <Component id="txtRepeatPassword" alignment="0" min="-2" pref="165" max="-2" attributes="0"/>
+                      <Component id="pwdPassword" min="-2" pref="165" max="-2" attributes="0"/>
+                      <Component id="pwdRepeatPassword" min="-2" pref="165" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="198" max="-2" attributes="0"/>
               </Group>
@@ -131,17 +131,17 @@
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtEmail" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtPassword" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                      <Component id="pwdPassword" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtRepeatPassword" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                      <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="pwdRepeatPassword" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                   <Component id="btnConfirm" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace pref="45" max="32767" attributes="0"/>
               </Group>
@@ -193,10 +193,6 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtEmail">
         </Component>
-        <Component class="javax.swing.JTextField" name="txtPassword">
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtRepeatPassword">
-        </Component>
         <Component class="javax.swing.JButton" name="btnConfirm">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -210,6 +206,10 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConfirmActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="pwdPassword">
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="pwdRepeatPassword">
         </Component>
       </SubComponents>
     </Container>

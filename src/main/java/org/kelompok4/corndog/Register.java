@@ -4,6 +4,13 @@
  */
 package org.kelompok4.corndog;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+
 /**
  *
  * @author ACER
@@ -42,9 +49,9 @@ public class Register extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         txtUsername = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
-        txtPassword = new javax.swing.JTextField();
-        txtRepeatPassword = new javax.swing.JTextField();
         btnConfirm = new javax.swing.JButton();
+        pwdPassword = new javax.swing.JPasswordField();
+        pwdRepeatPassword = new javax.swing.JPasswordField();
 
         jLabel2.setText("jLabel2");
 
@@ -115,8 +122,8 @@ public class Register extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtRepeatPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pwdPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pwdRepeatPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(198, 198, 198))
         );
         jPanel1Layout.setVerticalGroup(
@@ -132,15 +139,15 @@ public class Register extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtRepeatPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
-                .addGap(40, 40, 40)
+                    .addComponent(pwdPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(pwdRepeatPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(55, 55, 55)
                 .addComponent(btnConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(45, Short.MAX_VALUE))
         );
@@ -161,6 +168,62 @@ public class Register extends javax.swing.JFrame {
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
         // TODO add your handling code here:
+        String username = txtUsername.getText().trim();
+        String email = txtEmail.getText().trim();
+        String password = new String(pwdPassword.getPassword());
+        String repeatPassword = new String(pwdRepeatPassword.getPassword());
+
+        // Validasi kosong
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Semua kolom harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validasi password cocok
+        if (!password.equals(repeatPassword)) {
+            JOptionPane.showMessageDialog(this, "Password tidak cocok.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validasi email sederhana
+        if (!email.contains("@") || !email.contains(".")) {
+            JOptionPane.showMessageDialog(this, "Format email tidak valid.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Simpan ke database
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
+            String query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+            PreparedStatement pst = conn.prepareStatement(query);
+            pst.setString(1, username);
+            pst.setString(2, email);
+
+            // HASH password dulu sebelum disimpan
+            String hashedPassword = PasswordUtil.hashPassword(password);
+            pst.setString(3, hashedPassword);
+
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Registrasi berhasil!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+            // Reset field
+            txtUsername.setText("");
+            txtEmail.setText("");
+            pwdPassword.setText("");
+            pwdRepeatPassword.setText("");
+                        
+            // Buka form login lalu tutup form register
+            Login login = new Login();
+            login.setVisible(true);
+            this.dispose();
+
+            } catch (SQLException e) {
+            if (e.getMessage().contains("Duplicate")) {
+                JOptionPane.showMessageDialog(this, "Username atau Email sudah digunakan.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan ke database: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnConfirmActionPerformed
 
     /**
@@ -214,9 +277,9 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JPasswordField pwdPassword;
+    private javax.swing.JPasswordField pwdRepeatPassword;
     private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtPassword;
-    private javax.swing.JTextField txtRepeatPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }

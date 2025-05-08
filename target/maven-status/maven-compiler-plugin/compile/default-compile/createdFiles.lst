@@ -1,3 +1,4 @@
+org/kelompok4/corndog/Koneksi.class
 org/kelompok4/corndog/Home.class
 org/kelompok4/corndog/Home$9.class
 org/kelompok4/corndog/PeringatanBenar.class
@@ -10,8 +11,10 @@ org/kelompok4/corndog/Home$7.class
 org/kelompok4/corndog/Login.class
 org/kelompok4/corndog/Register$1.class
 org/kelompok4/corndog/Home$5.class
+org/kelompok4/corndog/Login$2.class
 org/kelompok4/corndog/PeringatanBerhasil$1.class
 org/kelompok4/corndog/Corndog.class
+org/kelompok4/corndog/PasswordUtil.class
 org/kelompok4/corndog/Register.class
 org/kelompok4/corndog/PeringatanBerhasil.class
 org/kelompok4/corndog/Home$8.class
@@ -23,4 +26,5 @@ org/kelompok4/corndog/Login$1.class
 org/kelompok4/corndog/Dashboard.class
 org/kelompok4/corndog/PeringatanSalah$1.class
 org/kelompok4/corndog/Home$6.class
+org/kelompok4/corndog/Login$3.class
 org/kelompok4/corndog/Home$1.class
