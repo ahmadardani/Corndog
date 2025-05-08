@@ -4,6 +4,13 @@
  */
 package org.kelompok4.corndog;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author akasaka
@@ -52,6 +59,11 @@ public class Login extends javax.swing.JFrame {
         btnLogin.setBackground(new java.awt.Color(0, 0, 0));
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
         btnLogin.setText("Login");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         btnRegister.setBackground(new java.awt.Color(0, 0, 0));
         btnRegister.setForeground(new java.awt.Color(255, 255, 255));
@@ -130,6 +142,49 @@ public class Login extends javax.swing.JFrame {
             register.setVisible(true);
             this.dispose();
     }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        // TODO add your handling code here:
+        String username = txtUsername.getText().trim();
+         String password = new String(pwdPassword.getPassword());
+
+         if (username.isEmpty() || password.isEmpty()) {
+             JOptionPane.showMessageDialog(this, "Username dan Password wajib diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+             return;
+         }
+
+         try {
+             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
+             String query = "SELECT password FROM users WHERE username = ?";
+             PreparedStatement pst = conn.prepareStatement(query);
+             pst.setString(1, username);
+             ResultSet rs = pst.executeQuery();
+
+             if (rs.next()) {
+                 String storedHashedPassword = rs.getString("password");
+                 String inputHashedPassword = PasswordUtil.hashPassword(password);
+
+                 if (storedHashedPassword.equals(inputHashedPassword)) {
+                     // Login berhasil
+                     JOptionPane.showMessageDialog(this, "Login berhasil!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+                     // Buka Home form
+                     Home home = new Home();
+                     home.setVisible(true);
+
+                     // Tutup Login form
+                     this.dispose();
+                 } else {
+                     JOptionPane.showMessageDialog(this, "Password salah!", "Gagal Login", JOptionPane.ERROR_MESSAGE);
+                 }
+             } else {
+                 JOptionPane.showMessageDialog(this, "Username tidak ditemukan!", "Gagal Login", JOptionPane.ERROR_MESSAGE);
+             }
+
+         } catch (SQLException e) {
+             JOptionPane.showMessageDialog(this, "Kesalahan koneksi: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+         }
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
