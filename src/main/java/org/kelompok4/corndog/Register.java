@@ -211,6 +211,11 @@ public class Register extends javax.swing.JFrame {
             txtEmail.setText("");
             pwdPassword.setText("");
             pwdRepeatPassword.setText("");
+                        
+            // Buka form login lalu tutup form register
+            Login login = new Login();
+            login.setVisible(true);
+            this.dispose();
 
             } catch (SQLException e) {
             if (e.getMessage().contains("Duplicate")) {
