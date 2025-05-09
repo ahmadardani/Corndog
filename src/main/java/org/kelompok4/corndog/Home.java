@@ -491,42 +491,40 @@ public class Home extends javax.swing.JFrame {
         // TODO add your handling code here:
         String productID = txtProdukID.getText().trim();
 
-        if (productID.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Product ID harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+         if (productID.isEmpty()) {
+             JOptionPane.showMessageDialog(this, "Product ID harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+             return;
+         }
 
-        int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus produk dengan ID " + productID + "?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) {
-            return;
-        }
+         int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus produk dengan ID " + productID + "?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+         if (confirm != JOptionPane.YES_OPTION) {
+             return;
+         }
 
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
-            String query = "DELETE FROM products WHERE product_id = ?";
-            PreparedStatement pst = conn.prepareStatement(query);
-            pst.setString(1, productID);
+         try {
+             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
+             String query = "DELETE FROM products WHERE product_id = ?";
+             PreparedStatement pst = conn.prepareStatement(query);
+             pst.setString(1, productID);
 
-            int rowsDeleted = pst.executeUpdate();
+             int rowsDeleted = pst.executeUpdate();
 
-            if (rowsDeleted > 0) {
-                JOptionPane.showMessageDialog(this, "Produk berhasil dihapus.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+             if (rowsDeleted > 0) {
+                 JOptionPane.showMessageDialog(this, "Produk berhasil dihapus.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                 loadTable(); // Refresh data di tblProduk
 
-                // Refresh tabel
-                loadTable();
+                 // Kosongkan semua input
+                 txtProdukID.setText("");
+                 txtProdukNama.setText("");
+                 txtHarga.setText("");
+                 txtStok.setText("");
+             } else {
+                 JOptionPane.showMessageDialog(this, "Produk dengan ID tersebut tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+             }
 
-                // Kosongkan field input
-                txtProdukID.setText("");
-                txtProdukNama.setText("");
-                txtHarga.setText("");
-                txtStok.setText("");
-            } else {
-                JOptionPane.showMessageDialog(this, "Produk dengan ID tersebut tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Gagal menghapus produk: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+         } catch (SQLException e) {
+             JOptionPane.showMessageDialog(this, "Gagal menghapus produk: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -542,40 +540,44 @@ public class Home extends javax.swing.JFrame {
         // TODO add your handling code here:
         String productId = txtProdukID.getText().trim();
         String productName = txtProdukNama.getText().trim();
-        String harga = txtHarga.getText().trim();
-        String stok = txtStok.getText().trim();
+        String hargaText = txtHarga.getText().trim();
+        String stokText = txtStok.getText().trim();
 
-        // Validasi input
-        if (productId.isEmpty() || productName.isEmpty() || harga.isEmpty() || stok.isEmpty()) {
+        // Validasi input kosong
+        if (productId.isEmpty() || productName.isEmpty() || hargaText.isEmpty() || stokText.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Semua kolom harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
+            int harga = Integer.parseInt(hargaText);
+            int stok = Integer.parseInt(stokText);
+
             // Koneksi ke database
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
             String query = "INSERT INTO products (product_id, product_name, harga, stok) VALUES (?, ?, ?, ?)";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, productId);
             pst.setString(2, productName);
-            pst.setString(3, harga);
-            pst.setString(4, stok);
+            pst.setInt(3, harga);
+            pst.setInt(4, stok);
 
-            // Eksekusi query untuk menambah data
             pst.executeUpdate();
 
-            // Menambahkan data ke model tabel secara langsung
+            // Tambahkan ke tabel GUI
             DefaultTableModel model = (DefaultTableModel) tblProduk.getModel();
             model.addRow(new Object[]{productId, productName, harga, stok});
 
             JOptionPane.showMessageDialog(this, "Produk berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
 
-            // Reset field input
+            // Kosongkan field input
             txtProdukID.setText("");
             txtProdukNama.setText("");
             txtHarga.setText("");
             txtStok.setText("");
 
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Harga dan stok harus berupa angka bulat.", "Peringatan", JOptionPane.WARNING_MESSAGE);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Gagal menambahkan produk: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -609,7 +611,7 @@ public class Home extends javax.swing.JFrame {
         }
 
         try {
-            double price = Double.parseDouble(priceText);
+            int price = Integer.parseInt(priceText); // Ubah jadi int
             int stock = Integer.parseInt(stockText);
 
             // Koneksi ke database
@@ -617,7 +619,7 @@ public class Home extends javax.swing.JFrame {
             String query = "UPDATE products SET product_name = ?, harga = ?, stok = ? WHERE product_id = ?";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, productName);
-            pst.setDouble(2, price);
+            pst.setInt(2, price); // Gunakan setInt
             pst.setInt(3, stock);
             pst.setString(4, productID);
 
@@ -625,13 +627,15 @@ public class Home extends javax.swing.JFrame {
 
             if (rowsUpdated > 0) {
                 JOptionPane.showMessageDialog(this, "Produk berhasil diperbarui.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                loadTable();
+                loadTable(); // Pastikan loadTable() berfungsi untuk refresh tblProduk
             } else {
                 JOptionPane.showMessageDialog(this, "Produk dengan ID tersebut tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-        } catch (SQLException | NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Gagal memperbarui produk : " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Harga dan stok harus berupa angka bulat.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal memperbarui produk: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
