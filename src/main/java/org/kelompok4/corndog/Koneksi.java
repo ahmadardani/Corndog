@@ -20,7 +20,7 @@ public class Koneksi {
         if(mysqlkonek==null)
         {
             try {
-                String DB="jdbc:mysql://localhost:3306/jayanusa"; // delta_db database
+                String DB="jdbc:mysql://localhost:3306/corndog"; // delta_db database
                 String user="root"; // user database
                 String pass=""; // password database
                 DriverManager.registerDriver(new com.mysql.jdbc.Driver());

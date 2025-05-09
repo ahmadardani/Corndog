@@ -38,7 +38,7 @@ public class Home extends javax.swing.JFrame {
     model.setRowCount(0); // Clear existing rows
 
     try {
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
         String query = "SELECT * FROM products";
         PreparedStatement stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
@@ -502,7 +502,7 @@ public class Home extends javax.swing.JFrame {
          }
 
          try {
-             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
+             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
              String query = "DELETE FROM products WHERE product_id = ?";
              PreparedStatement pst = conn.prepareStatement(query);
              pst.setString(1, productID);
@@ -554,7 +554,7 @@ public class Home extends javax.swing.JFrame {
             int stok = Integer.parseInt(stokText);
 
             // Koneksi ke database
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
             String query = "INSERT INTO products (product_id, product_name, harga, stok) VALUES (?, ?, ?, ?)";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, productId);
@@ -615,7 +615,7 @@ public class Home extends javax.swing.JFrame {
             int stock = Integer.parseInt(stockText);
 
             // Koneksi ke database
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
             String query = "UPDATE products SET product_name = ?, harga = ?, stok = ? WHERE product_id = ?";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, productName);
