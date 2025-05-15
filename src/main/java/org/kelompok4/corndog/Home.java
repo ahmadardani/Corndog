@@ -710,6 +710,7 @@ public class Home extends javax.swing.JFrame {
              if (rowsDeleted > 0) {
                  JOptionPane.showMessageDialog(this, "Produk berhasil dihapus.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                  loadTable(); // Refresh data di tblProduk
+                 loadMenuTable(); // Memperbarui Menu
 
                  // Kosongkan semua input
                  txtProdukID.setText("");
@@ -767,7 +768,9 @@ public class Home extends javax.swing.JFrame {
             model.addRow(new Object[]{productId, productName, harga, stok});
 
             JOptionPane.showMessageDialog(this, "Produk berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-
+            
+            // Memperbarui Menu
+            loadMenuTable();
             // Kosongkan field input
             txtProdukID.setText("");
             txtProdukNama.setText("");
@@ -822,6 +825,7 @@ public class Home extends javax.swing.JFrame {
             if (rowsUpdated > 0) {
                 JOptionPane.showMessageDialog(this, "Produk berhasil diperbarui.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                 loadTable(); // Pastikan loadTable() berfungsi untuk refresh tblProduk
+                loadMenuTable(); // Memperbarui Menu
             } else {
                 JOptionPane.showMessageDialog(this, "Produk dengan ID tersebut tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
             }
