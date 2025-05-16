@@ -193,7 +193,7 @@ public class Register extends javax.swing.JFrame {
 
         // Simpan ke database
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/beta1", "root", "");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
             String query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, username);
