@@ -136,6 +136,7 @@ private void updateAreaRincian() {
         jTextField1 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        btnClear2 = new javax.swing.JButton();
         panelManage = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProduk = new javax.swing.JTable();
@@ -320,6 +321,13 @@ private void updateAreaRincian() {
 
         jButton3.setText("Bayar");
 
+        btnClear2.setText("Clear");
+        btnClear2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClear2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMenuLayout = new javax.swing.GroupLayout(panelMenu);
         panelMenu.setLayout(panelMenuLayout);
         panelMenuLayout.setHorizontalGroup(
@@ -336,7 +344,8 @@ private void updateAreaRincian() {
                 .addGap(18, 18, 18)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                    .addComponent(btnAdd2, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                    .addComponent(btnAdd2, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+                    .addComponent(btnClear2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelMenuLayout.createSequentialGroup()
@@ -362,15 +371,17 @@ private void updateAreaRincian() {
                     .addComponent(jLabel9)
                     .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(panelMenuLayout.createSequentialGroup()
-                        .addGap(82, 82, 82)
+                        .addGap(37, 37, 37)
                         .addComponent(btnAdd2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48)
-                        .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(44, 44, 44)
+                        .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnClear2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)))
                 .addGap(18, 18, 18)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblHarga)
@@ -993,6 +1004,55 @@ private void updateAreaRincian() {
     }
     }//GEN-LAST:event_tblMenuMouseClicked
 
+    private void btnClear2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClear2ActionPerformed
+        // TODO add your handling code here:
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+
+            // Kembalikan stok setiap produk
+            for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
+                String namaProduk = entry.getKey();
+                int jumlahPesan = entry.getValue();
+
+                // Ambil stok saat ini
+                String querySelect = "SELECT stok FROM products WHERE product_name = ?";
+                PreparedStatement pstSelect = conn.prepareStatement(querySelect);
+                pstSelect.setString(1, namaProduk);
+                ResultSet rs = pstSelect.executeQuery();
+
+                if (rs.next()) {
+                    int stokSekarang = rs.getInt("stok");
+                    int stokBaru = stokSekarang + jumlahPesan;
+
+                    // Update stok di database
+                    String queryUpdate = "UPDATE products SET stok = ? WHERE product_name = ?";
+                    PreparedStatement pstUpdate = conn.prepareStatement(queryUpdate);
+                    pstUpdate.setInt(1, stokBaru);
+                    pstUpdate.setString(2, namaProduk);
+                    pstUpdate.executeUpdate();
+
+                    pstUpdate.close();
+                }
+
+                rs.close();
+                pstSelect.close();
+            }
+
+            conn.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal reset stok: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+
+        // Kosongkan pesanan dan tampilan
+        pesanan.clear();
+        hargaProduk.clear();
+        AreaRincian.setText("");
+        lblHarga.setText("Rp. 0");
+        loadMenuTable();
+        loadTable(); // Refresh tabel stok
+    }//GEN-LAST:event_btnClear2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1034,6 +1094,7 @@ private void updateAreaRincian() {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAdd2;
     private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnClear2;
     private javax.swing.JButton btnDashboard;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnHistory;
