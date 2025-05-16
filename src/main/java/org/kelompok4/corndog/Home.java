@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -61,6 +62,18 @@ public class Home extends javax.swing.JFrame {
         rs.close();
         stmt.close();
         conn.close();
+        
+        tblMenu.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() { //Menampilkan "Rp." di kolom tabel tanpa harus mengubah int ke string 
+            @Override
+            protected void setValue(Object value) {
+                if (value instanceof Integer) {
+                    setText("Rp. " + value);
+                } else {
+                    super.setValue(value);
+                }
+            }
+        });
+
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, "Gagal memuat data: " + e.getMessage());
     }
@@ -92,6 +105,19 @@ public class Home extends javax.swing.JFrame {
         rs.close();
         stmt.close();
         conn.close();
+        
+            tblProduk.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() { //Menampilkan "Rp." di kolom tabel tanpa harus mengubah int ke string 
+            @Override
+            protected void setValue(Object value) {
+                if (value instanceof Integer) {
+                    setText("Rp. " + value);
+                } else {
+                    super.setValue(value);
+                }
+            }
+        });
+
+        
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, "Gagal memuat data: " + e.getMessage());
     }
