@@ -841,6 +841,7 @@ private void updateAreaRincian() {
     private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
         // TODO add your handling code here:
         tabPanel.setSelectedComponent(panelMenu);
+        btnClear2ActionPerformed(evt);
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -945,6 +946,10 @@ private void updateAreaRincian() {
     private void btnManageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageActionPerformed
         // TODO add your handling code here:
         tabPanel.setSelectedComponent(panelManage);
+        txtProdukID.setText("");
+        txtProdukNama.setText("");
+        txtHarga.setText("");
+        txtStok.setText("");
     }//GEN-LAST:event_btnManageActionPerformed
 
     private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
@@ -1090,7 +1095,7 @@ private void updateAreaRincian() {
                 int jumlah = pesanan.getOrDefault(nama, 0) + 1;
                 pesanan.put(nama, jumlah);
                 hargaProduk.put(nama, harga); // Simpan harga untuk produk
-
+                
                 updateAreaRincian();
                 loadMenuTable();
                 loadTable(); // Refresh tampilan tabel
@@ -1114,7 +1119,7 @@ private void updateAreaRincian() {
 
     private void tblMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMenuMouseClicked
         // TODO add your handling code here:
-            int selectedRow = tblMenu.getSelectedRow();
+    int selectedRow = tblMenu.getSelectedRow();
     if (selectedRow >= 0) {
         String nama = tblMenu.getValueAt(selectedRow, 0).toString(); // Kolom 0: product_name
         String harga = tblMenu.getValueAt(selectedRow, 1).toString(); // Kolom 1: harga
