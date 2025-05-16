@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -28,6 +29,7 @@ public class Home extends javax.swing.JFrame {
         initComponents();
         loadMenuTable();
         loadTable(); // Panggil saat form dibuka
+        loadHistoryTable();
     }
 
     /**
@@ -94,6 +96,37 @@ public class Home extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Gagal memuat data: " + e.getMessage());
     }
 }
+ 
+    private void loadHistoryTable() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Order ID");
+        model.addColumn("Total");
+        model.addColumn("Order Date");
+
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+            String query = "SELECT * FROM history ORDER BY order_date DESC";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                int orderId = rs.getInt("order_id");
+                int total = rs.getInt("total");
+                String orderDate = rs.getString("order_date");
+
+                model.addRow(new Object[]{orderId, "Rp. " + total, orderDate});
+            }
+
+            tblHistory.setModel(model); // tblHistory adalah nama JTable yang menampilkan riwayat
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat data riwayat: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }    
     
 private void updateAreaRincian() {
     AreaRincian.setText("");
@@ -133,9 +166,9 @@ private void updateAreaRincian() {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         lblHarga = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtBayar = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btnBayar = new javax.swing.JButton();
         btnClear2 = new javax.swing.JButton();
         panelManage = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -319,7 +352,12 @@ private void updateAreaRincian() {
         jLabel13.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         jLabel13.setText("Bayar :");
 
-        jButton3.setText("Bayar");
+        btnBayar.setText("Bayar");
+        btnBayar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBayarActionPerformed(evt);
+            }
+        });
 
         btnClear2.setText("Clear");
         btnClear2.addActionListener(new java.awt.event.ActionListener() {
@@ -355,22 +393,21 @@ private void updateAreaRincian() {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuLayout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuLayout.createSequentialGroup()
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(68, 68, 68))
-                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane4))
+                        .addComponent(txtBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuLayout.createSequentialGroup()
+                        .addComponent(btnBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(68, 68, 68)))
                 .addGap(18, 18, 18))
         );
         panelMenuLayout.setVerticalGroup(
             panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMenuLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(21, 21, 21)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -389,9 +426,9 @@ private void updateAreaRincian() {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -1053,6 +1090,69 @@ private void updateAreaRincian() {
         loadTable(); // Refresh tabel stok
     }//GEN-LAST:event_btnClear2ActionPerformed
 
+    private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
+        // TODO add your handling code here:
+    int totalSemua = 0;
+
+    // Hitung total
+    for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
+        String nama = entry.getKey();
+        int jumlah = entry.getValue();
+        int harga = hargaProduk.getOrDefault(nama, 0);
+        totalSemua += jumlah * harga;
+    }
+
+    if (totalSemua == 0) {
+        JOptionPane.showMessageDialog(this, "Tidak ada pesanan untuk dibayar.");
+        return;
+    }
+
+    // Ambil input dari txtBayar
+    String bayarStr = txtBayar.getText().trim();
+    if (bayarStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Silakan masukkan jumlah uang yang dibayar.");
+        return;
+    }
+
+    try {
+        int uangDibayar = Integer.parseInt(bayarStr);
+
+        if (uangDibayar < totalSemua) {
+            JOptionPane.showMessageDialog(this, "Uang tidak cukup! Total yang harus dibayar: Rp. " + totalSemua);
+            return;
+        }
+
+        int kembalian = uangDibayar - totalSemua;
+
+        // Simpan transaksi ke database
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+        String query = "INSERT INTO history (total) VALUES (?)";
+        PreparedStatement pst = conn.prepareStatement(query);
+        pst.setInt(1, totalSemua);
+        pst.executeUpdate();
+
+        JOptionPane.showMessageDialog(this, "Transaksi berhasil!\nKembalian: Rp. " + kembalian);
+
+        // Reset data & UI
+        pesanan.clear();
+        hargaProduk.clear();
+        AreaRincian.setText("");
+        lblHarga.setText("Rp. 0");
+        txtBayar.setText("");
+        loadMenuTable();
+        loadHistoryTable();
+        
+        pst.close();
+        conn.close();
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Input uang tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Gagal menyimpan transaksi: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
+    }//GEN-LAST:event_btnBayarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1093,6 +1193,7 @@ private void updateAreaRincian() {
     private javax.swing.JTextArea AreaRincian;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAdd2;
+    private javax.swing.JButton btnBayar;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnClear2;
     private javax.swing.JButton btnDashboard;
@@ -1102,7 +1203,6 @@ private void updateAreaRincian() {
     private javax.swing.JButton btnMenu;
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1127,7 +1227,6 @@ private void updateAreaRincian() {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblHarga;
     private javax.swing.JPanel navbarPanel;
     private javax.swing.JPanel panelDashboard;
@@ -1138,6 +1237,7 @@ private void updateAreaRincian() {
     private javax.swing.JTable tblHistory;
     private javax.swing.JTable tblMenu;
     private javax.swing.JTable tblProduk;
+    private javax.swing.JTextField txtBayar;
     private javax.swing.JTextField txtHarga;
     private javax.swing.JTextField txtProdukID;
     private javax.swing.JTextField txtProdukNama;
