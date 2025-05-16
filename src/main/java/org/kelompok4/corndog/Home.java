@@ -423,6 +423,7 @@ private void updateAreaRincian() {
 
         lblHarga.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         lblHarga.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblHarga.setText("Belum Ada");
 
         jLabel13.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         jLabel13.setText("Bayar :");
@@ -672,7 +673,7 @@ private void updateAreaRincian() {
         lblProdukTerjual.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
         lblProdukTerjual.setForeground(new java.awt.Color(255, 255, 255));
         lblProdukTerjual.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblProdukTerjual.setText("x");
+        lblProdukTerjual.setText("Belum Ada");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -702,7 +703,7 @@ private void updateAreaRincian() {
         lblTotalIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         lblTotalIncome.setForeground(new java.awt.Color(255, 255, 255));
         lblTotalIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTotalIncome.setText("x");
+        lblTotalIncome.setText("Belum Ada");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -732,7 +733,7 @@ private void updateAreaRincian() {
         lblTodayIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         lblTodayIncome.setForeground(new java.awt.Color(255, 255, 255));
         lblTodayIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTodayIncome.setText("x");
+        lblTodayIncome.setText("Belum Ada");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);

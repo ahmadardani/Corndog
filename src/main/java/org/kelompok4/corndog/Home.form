@@ -373,6 +373,7 @@
                   <Font name="SF Pro Display" size="18" style="0"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="4"/>
+                <Property name="text" type="java.lang.String" value="Belum Ada"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtBayar">
@@ -776,7 +777,7 @@
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="x"/>
+                    <Property name="text" type="java.lang.String" value="Belum Ada"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -832,7 +833,7 @@
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="x"/>
+                    <Property name="text" type="java.lang.String" value="Belum Ada"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -888,7 +889,7 @@
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="x"/>
+                    <Property name="text" type="java.lang.String" value="Belum Ada"/>
                   </Properties>
                 </Component>
               </SubComponents>
