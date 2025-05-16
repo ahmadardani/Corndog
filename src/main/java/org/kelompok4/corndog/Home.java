@@ -31,6 +31,7 @@ public class Home extends javax.swing.JFrame {
         loadMenuTable();
         loadTable(); // Panggil saat form dibuka
         loadHistoryTable();
+        loadDashboardInfo();
     }
 
     /**
@@ -169,6 +170,52 @@ private void updateAreaRincian() {
         // Tampilkan total di JLabel
     lblHarga.setText("Rp. " + totalSemua);
 }
+
+    private void loadDashboardInfo() {
+    try {
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+
+        // Produk Terjual (jumlah transaksi)
+        String sqlTotalTransaksi = "SELECT COUNT(*) AS total_transaksi FROM history";
+        PreparedStatement pst1 = conn.prepareStatement(sqlTotalTransaksi);
+        ResultSet rs1 = pst1.executeQuery();
+        if (rs1.next()) {
+            int produkTerjual = rs1.getInt("total_transaksi");
+            lblProdukTerjual.setText(String.valueOf(produkTerjual));
+        }
+        rs1.close();
+        pst1.close();
+
+        // Total Income (semua total)
+        String sqlTotalIncome = "SELECT SUM(total) AS total_income FROM history";
+        PreparedStatement pst2 = conn.prepareStatement(sqlTotalIncome);
+        ResultSet rs2 = pst2.executeQuery();
+        if (rs2.next()) {
+            int totalIncome = rs2.getInt("total_income");
+            lblTotalIncome.setText("Rp. " + totalIncome);
+        }
+        rs2.close();
+        pst2.close();
+
+        // Today Income (berdasarkan tanggal hari ini)
+        String sqlTodayIncome = "SELECT SUM(total) AS today_income FROM history WHERE DATE(order_date) = CURDATE()";
+        PreparedStatement pst3 = conn.prepareStatement(sqlTodayIncome);
+        ResultSet rs3 = pst3.executeQuery();
+        if (rs3.next()) {
+            int todayIncome = rs3.getInt("today_income");
+            lblTodayIncome.setText("Rp. " + todayIncome);
+        }
+        rs3.close();
+        pst3.close();
+
+        conn.close();
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Gagal memuat data dashboard: " + ex.getMessage());
+        ex.printStackTrace();
+    }
+}
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -216,11 +263,13 @@ private void updateAreaRincian() {
         jLabel8 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        lblProdukTerjual = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
+        lblTotalIncome = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
+        lblTodayIncome = new javax.swing.JLabel();
         panelHistory = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblHistory = new javax.swing.JTable();
@@ -407,8 +456,8 @@ private void updateAreaRincian() {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                    .addComponent(btnAdd2, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+                    .addComponent(btnRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                    .addComponent(btnAdd2, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
                     .addComponent(btnClear2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -455,7 +504,7 @@ private void updateAreaRincian() {
                     .addComponent(txtBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         tabPanel.addTab("tab1", panelMenu);
@@ -617,25 +666,20 @@ private void updateAreaRincian() {
 
         jLabel14.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setText("Produk Terjual");
 
-        jLabel15.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel15.setText("201");
+        lblProdukTerjual.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
+        lblProdukTerjual.setForeground(new java.awt.Color(255, 255, 255));
+        lblProdukTerjual.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblProdukTerjual.setText("x");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jLabel14))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(63, 63, 63)
-                        .addComponent(jLabel15)))
-                .addContainerGap(35, Short.MAX_VALUE))
+            .addComponent(lblProdukTerjual, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -643,7 +687,7 @@ private void updateAreaRincian() {
                 .addGap(15, 15, 15)
                 .addComponent(jLabel14)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel15)
+                .addComponent(lblProdukTerjual)
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -652,23 +696,29 @@ private void updateAreaRincian() {
 
         jLabel16.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setText("Total Income");
+
+        lblTotalIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        lblTotalIncome.setForeground(new java.awt.Color(255, 255, 255));
+        lblTotalIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTotalIncome.setText("x");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(jLabel16)
-                .addContainerGap(43, Short.MAX_VALUE))
+            .addComponent(lblTotalIncome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel16)
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addComponent(lblTotalIncome)
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(85, 63, 63));
@@ -676,23 +726,29 @@ private void updateAreaRincian() {
 
         jLabel17.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel17.setText("Today Income");
+
+        lblTodayIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        lblTodayIncome.setForeground(new java.awt.Color(255, 255, 255));
+        lblTodayIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTodayIncome.setText("x");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel17)
-                .addContainerGap(42, Short.MAX_VALUE))
+            .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+            .addComponent(lblTodayIncome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(15, 15, 15)
                 .addComponent(jLabel17)
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addComponent(lblTodayIncome)
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelDashboardLayout = new javax.swing.GroupLayout(panelDashboard);
@@ -704,7 +760,7 @@ private void updateAreaRincian() {
                 .addComponent(jLabel8)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDashboardLayout.createSequentialGroup()
-                .addContainerGap(146, Short.MAX_VALUE)
+                .addContainerGap(90, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(69, 69, 69)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1234,7 +1290,6 @@ private void updateAreaRincian() {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
@@ -1254,6 +1309,9 @@ private void updateAreaRincian() {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblHarga;
+    private javax.swing.JLabel lblProdukTerjual;
+    private javax.swing.JLabel lblTodayIncome;
+    private javax.swing.JLabel lblTotalIncome;
     private javax.swing.JPanel navbarPanel;
     private javax.swing.JPanel panelDashboard;
     private javax.swing.JPanel panelHistory;
