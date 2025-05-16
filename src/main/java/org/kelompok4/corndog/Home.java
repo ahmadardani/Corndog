@@ -893,21 +893,55 @@ private void updateAreaRincian() {
 
     private void btnAdd2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdd2ActionPerformed
         // TODO add your handling code here:
-        String nama = txtProdukNama.getText();
-        String hargaStr = txtHarga.getText();
+    String nama = txtProdukNama.getText();
+    String hargaStr = txtHarga.getText();
 
-        try {
-            int harga = Integer.parseInt(hargaStr);
+    try {
+        int harga = Integer.parseInt(hargaStr);
 
-            // Tambah ke map
-            int jumlah = pesanan.getOrDefault(nama, 0) + 1;
-            pesanan.put(nama, jumlah);
-            hargaProduk.put(nama, harga); // Simpan harga untuk setiap produk
+        // Cek stok dari database
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+        String queryStok = "SELECT stok FROM products WHERE product_name = ?";
+        PreparedStatement pst = conn.prepareStatement(queryStok);
+        pst.setString(1, nama);
+        ResultSet rs = pst.executeQuery();
 
-            updateAreaRincian();
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Harga tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
+        if (rs.next()) {
+            int stokSekarang = rs.getInt("stok");
+
+            if (stokSekarang > 0) {
+                // Kurangi stok
+                int stokBaru = stokSekarang - 1;
+                String queryUpdate = "UPDATE products SET stok = ? WHERE product_name = ?";
+                PreparedStatement pstUpdate = conn.prepareStatement(queryUpdate);
+                pstUpdate.setInt(1, stokBaru);
+                pstUpdate.setString(2, nama);
+                pstUpdate.executeUpdate();
+
+                // Tambahkan ke map pesanan
+                int jumlah = pesanan.getOrDefault(nama, 0) + 1;
+                pesanan.put(nama, jumlah);
+                hargaProduk.put(nama, harga); // Simpan harga untuk produk
+
+                updateAreaRincian();
+                loadMenuTable();
+                loadTable(); // Refresh tampilan tabel
+            } else {
+                JOptionPane.showMessageDialog(this, "Stok habis untuk produk ini.");
+            }
+
+            rs.close();
+            pst.close();
+        } else {
+            JOptionPane.showMessageDialog(this, "Produk tidak ditemukan di database.");
         }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Harga tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Gagal mengakses database: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
+
     }//GEN-LAST:event_btnAdd2ActionPerformed
 
     private void tblMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMenuMouseClicked
