@@ -879,16 +879,53 @@ private void updateAreaRincian() {
         // TODO add your handling code here:
     String nama = txtProdukNama.getText();
 
-       if (pesanan.containsKey(nama)) {
-           int jumlah = pesanan.get(nama) - 1;
-           if (jumlah > 0) {
-               pesanan.put(nama, jumlah);
-           } else {
-               pesanan.remove(nama);
-               hargaProduk.remove(nama);
-           }
-           updateAreaRincian();
-       }
+        if (pesanan.containsKey(nama)) {
+            int jumlah = pesanan.get(nama) - 1;
+
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+
+                // Ambil stok sekarang dari database
+                String queryStok = "SELECT stok FROM products WHERE product_name = ?";
+                PreparedStatement pstStok = conn.prepareStatement(queryStok);
+                pstStok.setString(1, nama);
+                ResultSet rs = pstStok.executeQuery();
+
+                if (rs.next()) {
+                    int stokSekarang = rs.getInt("stok");
+                    int stokBaru = stokSekarang + 1;
+
+                    // Update stok di database
+                    String queryUpdate = "UPDATE products SET stok = ? WHERE product_name = ?";
+                    PreparedStatement pstUpdate = conn.prepareStatement(queryUpdate);
+                    pstUpdate.setInt(1, stokBaru);
+                    pstUpdate.setString(2, nama);
+                    pstUpdate.executeUpdate();
+
+                    pstUpdate.close();
+                }
+
+                rs.close();
+                pstStok.close();
+                conn.close();
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Gagal update stok: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+
+            // Update pesanan map
+            if (jumlah > 0) {
+                pesanan.put(nama, jumlah);
+            } else {
+                pesanan.remove(nama);
+                hargaProduk.remove(nama);
+            }
+
+            updateAreaRincian();
+            loadMenuTable(); // refresh stok di tabel menu
+            loadTable(); // refresh stok di UI
+        }
     }//GEN-LAST:event_btnRemoveActionPerformed
 
     private void btnAdd2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdd2ActionPerformed
