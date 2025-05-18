@@ -215,6 +215,18 @@ public class Home extends javax.swing.JFrame {
         ex.printStackTrace();
     }
 }
+    private void refreshMenuTableKeepSelection() {
+    // Simpan baris yang sedang dipilih
+    int selectedRow = tblMenu.getSelectedRow();
+
+    // Reload data ke tabel
+    loadMenuTable();
+
+    // Set ulang selection jika sebelumnya ada yang dipilih dan masih valid
+    if (selectedRow >= 0 && selectedRow < tblMenu.getRowCount()) {
+        tblMenu.setRowSelectionInterval(selectedRow, selectedRow);
+    }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -939,6 +951,25 @@ public class Home extends javax.swing.JFrame {
 
             // Koneksi ke database
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+
+            // Cek apakah ID produk sudah ada
+            String checkQuery = "SELECT product_id FROM products WHERE product_id = ?";
+            PreparedStatement checkPst = conn.prepareStatement(checkQuery);
+            checkPst.setString(1, productId);
+            ResultSet rs = checkPst.executeQuery();
+
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "ID Produk sudah ada. Gunakan ID lain.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                rs.close();
+                checkPst.close();
+                conn.close();
+                return;
+            }
+
+            rs.close();
+            checkPst.close();
+
+            // Lanjutkan insert jika ID belum ada
             String query = "INSERT INTO products (product_id, product_name, harga, stok) VALUES (?, ?, ?, ?)";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, productId);
@@ -953,15 +984,19 @@ public class Home extends javax.swing.JFrame {
             model.addRow(new Object[]{productId, productName, harga, stok});
 
             JOptionPane.showMessageDialog(this, "Produk berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-            
 
             // Kosongkan field input
             txtProdukID.setText("");
             txtProdukNama.setText("");
             txtHarga.setText("");
             txtStok.setText("");
+
             // Memperbarui Menu
             loadMenuTable();
+
+            pst.close();
+            conn.close();
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Harga dan stok harus berupa angka bulat.", "Peringatan", JOptionPane.WARNING_MESSAGE);
         } catch (SQLException e) {
@@ -1085,7 +1120,7 @@ public class Home extends javax.swing.JFrame {
             }
 
             updateAreaRincian();
-            loadMenuTable(); // refresh stok di tabel menu
+            refreshMenuTableKeepSelection(); // refresh stok di tabel menu
             loadTable(); // refresh stok di UI
         }
     }//GEN-LAST:event_btnRemoveActionPerformed
@@ -1123,7 +1158,7 @@ public class Home extends javax.swing.JFrame {
                 hargaProduk.put(nama, harga); // Simpan harga untuk produk
                 
                 updateAreaRincian();
-                loadMenuTable();
+                refreshMenuTableKeepSelection();
                 loadTable(); // Refresh tampilan tabel
             } else {
                 JOptionPane.showMessageDialog(this, "Stok habis untuk produk ini.");
