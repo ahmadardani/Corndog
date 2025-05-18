@@ -155,21 +155,21 @@ public class Home extends javax.swing.JFrame {
         }
     }    
     
-private void updateAreaRincian() {
-    AreaRincian.setText("");
-    int totalSemua = 0;
+    private void updateAreaRincian() {
+        AreaRincian.setText("");
+        int totalSemua = 0;
 
-    for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
-        String nama = entry.getKey();
-        int jumlah = entry.getValue();
-        int harga = hargaProduk.getOrDefault(nama, 0);
-        int total = jumlah * harga;
-        totalSemua += total;
-        AreaRincian.append(nama + " x" + jumlah + " = Rp" + total + "\n");
+        for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
+            String nama = entry.getKey();
+            int jumlah = entry.getValue();
+            int harga = hargaProduk.getOrDefault(nama, 0);
+            int total = jumlah * harga;
+            totalSemua += total;
+            AreaRincian.append(nama + " x" + jumlah + " = Rp" + total + "\n");
+        }
+            // Tampilkan total di JLabel
+        lblHarga.setText("Rp. " + totalSemua);
     }
-        // Tampilkan total di JLabel
-    lblHarga.setText("Rp. " + totalSemua);
-}
 
     private void loadDashboardInfo() {
     try {
@@ -186,13 +186,13 @@ private void updateAreaRincian() {
         rs1.close();
         pst1.close();
 
-        // Total Income (semua total)
-        String sqlTotalIncome = "SELECT SUM(total) AS total_income FROM history";
-        PreparedStatement pst2 = conn.prepareStatement(sqlTotalIncome);
+        // Monthly Income (Total pemasukan bulan ini)
+        String sqlMonthlyIncome = "SELECT SUM(total) AS monthly_income FROM history WHERE MONTH(order_date) = MONTH(CURRENT_DATE()) AND YEAR(order_date) = YEAR(CURRENT_DATE())";
+        PreparedStatement pst2 = conn.prepareStatement(sqlMonthlyIncome);
         ResultSet rs2 = pst2.executeQuery();
         if (rs2.next()) {
-            int totalIncome = rs2.getInt("total_income");
-            lblTotalIncome.setText("Rp. " + totalIncome);
+            int monthlyIncome = rs2.getInt("monthly_income");
+            lblMonthlyIncome.setText("Rp. " + monthlyIncome);
         }
         rs2.close();
         pst2.close();
@@ -266,10 +266,11 @@ private void updateAreaRincian() {
         lblProdukTerjual = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
-        lblTotalIncome = new javax.swing.JLabel();
+        lblMonthlyIncome = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         lblTodayIncome = new javax.swing.JLabel();
+        btnResetAll = new javax.swing.JButton();
         panelHistory = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblHistory = new javax.swing.JTable();
@@ -387,7 +388,7 @@ private void updateAreaRincian() {
                 {null, null, null}
             },
             new String [] {
-                "Nama", "Harga (Rp.)", "Stok Tersisa"
+                "Name", "Price (Rp.)", "Remaining Stock"
             }
         ));
         tblMenu.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -401,6 +402,9 @@ private void updateAreaRincian() {
         AreaRincian.setRows(5);
         jScrollPane4.setViewportView(AreaRincian);
 
+        btnAdd2.setBackground(new java.awt.Color(0, 0, 0));
+        btnAdd2.setFont(new java.awt.Font("SF Pro Display", 0, 13)); // NOI18N
+        btnAdd2.setForeground(new java.awt.Color(255, 255, 255));
         btnAdd2.setText("Add");
         btnAdd2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -408,6 +412,9 @@ private void updateAreaRincian() {
             }
         });
 
+        btnRemove.setBackground(new java.awt.Color(0, 0, 0));
+        btnRemove.setFont(new java.awt.Font("SF Pro Display", 0, 13)); // NOI18N
+        btnRemove.setForeground(new java.awt.Color(255, 255, 255));
         btnRemove.setText("Remove");
         btnRemove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -416,25 +423,31 @@ private void updateAreaRincian() {
         });
 
         jLabel10.setFont(new java.awt.Font("SF Pro Display", 1, 20)); // NOI18N
-        jLabel10.setText("Rincian");
+        jLabel10.setText("Details");
 
         jLabel11.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel11.setText("Total :");
 
         lblHarga.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         lblHarga.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblHarga.setText("Belum Ada");
+        lblHarga.setText("Rp. 0");
 
         jLabel13.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        jLabel13.setText("Bayar :");
+        jLabel13.setText("Pay :");
 
-        btnBayar.setText("Bayar");
+        btnBayar.setBackground(new java.awt.Color(85, 63, 63));
+        btnBayar.setFont(new java.awt.Font("SF Pro Display", 0, 13)); // NOI18N
+        btnBayar.setForeground(new java.awt.Color(255, 255, 255));
+        btnBayar.setText("Confirm");
         btnBayar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBayarActionPerformed(evt);
             }
         });
 
+        btnClear2.setBackground(new java.awt.Color(0, 0, 0));
+        btnClear2.setFont(new java.awt.Font("SF Pro Display", 0, 13)); // NOI18N
+        btnClear2.setForeground(new java.awt.Color(255, 255, 255));
         btnClear2.setText("Clear");
         btnClear2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -520,7 +533,7 @@ private void updateAreaRincian() {
                 {null, null, null, null}
             },
             new String [] {
-                "Product ID", "Product Name", "Harga", "Stok"
+                "Product ID", "Product Name", "Price", "Stock"
             }
         ));
         tblProduk.setGridColor(new java.awt.Color(0, 0, 0));
@@ -571,9 +584,9 @@ private void updateAreaRincian() {
 
         jLabel3.setText("Product Name");
 
-        jLabel4.setText("Harga");
+        jLabel4.setText("Price");
 
-        jLabel5.setText("Stok");
+        jLabel5.setText("Stock");
 
         jLabel6.setFont(new java.awt.Font("SF Pro Display", 1, 20)); // NOI18N
         jLabel6.setText("Manage");
@@ -668,12 +681,12 @@ private void updateAreaRincian() {
         jLabel14.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel14.setText("Produk Terjual");
+        jLabel14.setText("Product Sold");
 
         lblProdukTerjual.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
         lblProdukTerjual.setForeground(new java.awt.Color(255, 255, 255));
         lblProdukTerjual.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblProdukTerjual.setText("Belum Ada");
+        lblProdukTerjual.setText("0");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -698,18 +711,18 @@ private void updateAreaRincian() {
         jLabel16.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel16.setText("Total Income");
+        jLabel16.setText("Monthly Income");
 
-        lblTotalIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        lblTotalIncome.setForeground(new java.awt.Color(255, 255, 255));
-        lblTotalIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTotalIncome.setText("Belum Ada");
+        lblMonthlyIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        lblMonthlyIncome.setForeground(new java.awt.Color(255, 255, 255));
+        lblMonthlyIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMonthlyIncome.setText("Rp. 0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblTotalIncome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblMonthlyIncome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
@@ -718,7 +731,7 @@ private void updateAreaRincian() {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel16)
                 .addGap(28, 28, 28)
-                .addComponent(lblTotalIncome)
+                .addComponent(lblMonthlyIncome)
                 .addContainerGap(42, Short.MAX_VALUE))
         );
 
@@ -733,7 +746,7 @@ private void updateAreaRincian() {
         lblTodayIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         lblTodayIncome.setForeground(new java.awt.Color(255, 255, 255));
         lblTodayIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTodayIncome.setText("Belum Ada");
+        lblTodayIncome.setText("Rp. 0");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -752,6 +765,14 @@ private void updateAreaRincian() {
                 .addContainerGap(42, Short.MAX_VALUE))
         );
 
+        btnResetAll.setBackground(new java.awt.Color(153, 153, 153));
+        btnResetAll.setText("Reset All");
+        btnResetAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetAllActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelDashboardLayout = new javax.swing.GroupLayout(panelDashboard);
         panelDashboard.setLayout(panelDashboardLayout);
         panelDashboardLayout.setHorizontalGroup(
@@ -762,11 +783,14 @@ private void updateAreaRincian() {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDashboardLayout.createSequentialGroup()
                 .addContainerGap(90, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(69, 69, 69)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(62, 62, 62)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelDashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnResetAll)
+                    .addGroup(panelDashboardLayout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(79, 79, 79))
         );
         panelDashboardLayout.setVerticalGroup(
@@ -779,7 +803,9 @@ private void updateAreaRincian() {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(312, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                .addComponent(btnResetAll, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(67, 67, 67))
         );
 
         tabPanel.addTab("tab3", panelDashboard);
@@ -1229,6 +1255,7 @@ private void updateAreaRincian() {
         txtBayar.setText("");
         loadMenuTable();
         loadHistoryTable();
+        loadDashboardInfo();
         
         pst.close();
         conn.close();
@@ -1240,6 +1267,45 @@ private void updateAreaRincian() {
         ex.printStackTrace();
     }
     }//GEN-LAST:event_btnBayarActionPerformed
+
+    private void btnResetAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetAllActionPerformed
+            // TODO add your handling code here:
+               // Tampilkan dialog konfirmasi
+        int konfirmasi = JOptionPane.showConfirmDialog(
+                this,
+                "Apakah Anda yakin ingin menghapus semua data di database?",
+                "Konfirmasi Reset Data",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        // Jika user klik YES
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+
+                // Hapus data dari semua tabel yang relevan
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate("DELETE FROM history");
+                stmt.executeUpdate("DELETE FROM products");
+                // Jika ada tabel lain, tambahkan juga perintah delete-nya
+
+                stmt.close();
+                conn.close();
+
+                JOptionPane.showMessageDialog(this, "Semua data berhasil dihapus.");
+
+                // Refresh UI jika diperlukan
+                loadMenuTable();
+                loadTable();
+                loadHistoryTable();
+                loadDashboardInfo();
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data: " + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_btnResetAllActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1290,6 +1356,7 @@ private void updateAreaRincian() {
     private javax.swing.JButton btnManage;
     private javax.swing.JButton btnMenu;
     private javax.swing.JButton btnRemove;
+    private javax.swing.JButton btnResetAll;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1315,9 +1382,9 @@ private void updateAreaRincian() {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblHarga;
+    private javax.swing.JLabel lblMonthlyIncome;
     private javax.swing.JLabel lblProdukTerjual;
     private javax.swing.JLabel lblTodayIncome;
-    private javax.swing.JLabel lblTotalIncome;
     private javax.swing.JPanel navbarPanel;
     private javax.swing.JPanel panelDashboard;
     private javax.swing.JPanel panelHistory;
