@@ -968,6 +968,24 @@ public class Home extends javax.swing.JFrame {
 
             rs.close();
             checkPst.close();
+            
+            // Cek apakah nama produk sudah ada
+            String checkNameQuery = "SELECT product_name FROM products WHERE product_name = ?";
+            PreparedStatement checkNamePst = conn.prepareStatement(checkNameQuery);
+            checkNamePst.setString(1, productName);
+            ResultSet rsName = checkNamePst.executeQuery();
+
+            if (rsName.next()) {
+                JOptionPane.showMessageDialog(this, "Nama produk sudah ada. Gunakan nama lain.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                rsName.close();
+                checkNamePst.close();
+                conn.close();
+                return;
+            }
+
+            rsName.close();
+            checkNamePst.close();
+
 
             // Lanjutkan insert jika ID belum ada
             String query = "INSERT INTO products (product_id, product_name, harga, stok) VALUES (?, ?, ?, ?)";
