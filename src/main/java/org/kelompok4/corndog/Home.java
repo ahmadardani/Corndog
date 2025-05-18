@@ -986,7 +986,6 @@ public class Home extends javax.swing.JFrame {
             rsName.close();
             checkNamePst.close();
 
-
             // Lanjutkan insert jika ID belum ada
             String query = "INSERT INTO products (product_id, product_name, harga, stok) VALUES (?, ?, ?, ?)";
             PreparedStatement pst = conn.prepareStatement(query);
@@ -1025,6 +1024,7 @@ public class Home extends javax.swing.JFrame {
     private void btnManageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageActionPerformed
         // TODO add your handling code here:
         tabPanel.setSelectedComponent(panelManage);
+        btnClear2ActionPerformed(evt);
         txtProdukID.setText("");
         txtProdukNama.setText("");
         txtHarga.setText("");
@@ -1187,8 +1187,6 @@ public class Home extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Produk tidak ditemukan di database.");
         }
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "Harga tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Gagal mengakses database: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
         ex.printStackTrace();
