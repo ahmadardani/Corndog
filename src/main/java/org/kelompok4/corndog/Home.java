@@ -215,6 +215,18 @@ private void updateAreaRincian() {
         ex.printStackTrace();
     }
 }
+    private void refreshMenuTableKeepSelection() {
+    // Simpan baris yang sedang dipilih
+    int selectedRow = tblMenu.getSelectedRow();
+
+    // Reload data ke tabel
+    loadMenuTable();
+
+    // Set ulang selection jika sebelumnya ada yang dipilih dan masih valid
+    if (selectedRow >= 0 && selectedRow < tblMenu.getRowCount()) {
+        tblMenu.setRowSelectionInterval(selectedRow, selectedRow);
+    }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -939,6 +951,42 @@ private void updateAreaRincian() {
 
             // Koneksi ke database
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+
+            // Cek apakah ID produk sudah ada
+            String checkQuery = "SELECT product_id FROM products WHERE product_id = ?";
+            PreparedStatement checkPst = conn.prepareStatement(checkQuery);
+            checkPst.setString(1, productId);
+            ResultSet rs = checkPst.executeQuery();
+
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "ID Produk sudah ada. Gunakan ID lain.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                rs.close();
+                checkPst.close();
+                conn.close();
+                return;
+            }
+
+            rs.close();
+            checkPst.close();
+            
+            // Cek apakah nama produk sudah ada
+            String checkNameQuery = "SELECT product_name FROM products WHERE product_name = ?";
+            PreparedStatement checkNamePst = conn.prepareStatement(checkNameQuery);
+            checkNamePst.setString(1, productName);
+            ResultSet rsName = checkNamePst.executeQuery();
+
+            if (rsName.next()) {
+                JOptionPane.showMessageDialog(this, "Nama produk sudah ada. Gunakan nama lain.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                rsName.close();
+                checkNamePst.close();
+                conn.close();
+                return;
+            }
+
+            rsName.close();
+            checkNamePst.close();
+
+            // Lanjutkan insert jika ID belum ada
             String query = "INSERT INTO products (product_id, product_name, harga, stok) VALUES (?, ?, ?, ?)";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, productId);
@@ -953,15 +1001,19 @@ private void updateAreaRincian() {
             model.addRow(new Object[]{productId, productName, harga, stok});
 
             JOptionPane.showMessageDialog(this, "Produk berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-            
 
             // Kosongkan field input
             txtProdukID.setText("");
             txtProdukNama.setText("");
             txtHarga.setText("");
             txtStok.setText("");
+
             // Memperbarui Menu
             loadMenuTable();
+
+            pst.close();
+            conn.close();
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Harga dan stok harus berupa angka bulat.", "Peringatan", JOptionPane.WARNING_MESSAGE);
         } catch (SQLException e) {
@@ -972,6 +1024,7 @@ private void updateAreaRincian() {
     private void btnManageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageActionPerformed
         // TODO add your handling code here:
         tabPanel.setSelectedComponent(panelManage);
+        btnClear2ActionPerformed(evt);
         txtProdukID.setText("");
         txtProdukNama.setText("");
         txtHarga.setText("");
@@ -1085,7 +1138,7 @@ private void updateAreaRincian() {
             }
 
             updateAreaRincian();
-            loadMenuTable(); // refresh stok di tabel menu
+            refreshMenuTableKeepSelection(); // refresh stok di tabel menu
             loadTable(); // refresh stok di UI
         }
     }//GEN-LAST:event_btnRemoveActionPerformed
@@ -1123,7 +1176,7 @@ private void updateAreaRincian() {
                 hargaProduk.put(nama, harga); // Simpan harga untuk produk
                 
                 updateAreaRincian();
-                loadMenuTable();
+                refreshMenuTableKeepSelection();
                 loadTable(); // Refresh tampilan tabel
             } else {
                 JOptionPane.showMessageDialog(this, "Stok habis untuk produk ini.");
@@ -1134,8 +1187,6 @@ private void updateAreaRincian() {
         } else {
             JOptionPane.showMessageDialog(this, "Produk tidak ditemukan di database.");
         }
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "Harga tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Gagal mengakses database: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
         ex.printStackTrace();
