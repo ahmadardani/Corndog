@@ -155,21 +155,21 @@ public class Home extends javax.swing.JFrame {
         }
     }    
     
-private void updateAreaRincian() {
-    AreaRincian.setText("");
-    int totalSemua = 0;
+    private void updateAreaRincian() {
+        AreaRincian.setText("");
+        int totalSemua = 0;
 
-    for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
-        String nama = entry.getKey();
-        int jumlah = entry.getValue();
-        int harga = hargaProduk.getOrDefault(nama, 0);
-        int total = jumlah * harga;
-        totalSemua += total;
-        AreaRincian.append(nama + " x" + jumlah + " = Rp" + total + "\n");
+        for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
+            String nama = entry.getKey();
+            int jumlah = entry.getValue();
+            int harga = hargaProduk.getOrDefault(nama, 0);
+            int total = jumlah * harga;
+            totalSemua += total;
+            AreaRincian.append(nama + " x" + jumlah + " = Rp" + total + "\n");
+        }
+            // Tampilkan total di JLabel
+        lblHarga.setText("Rp. " + totalSemua);
     }
-        // Tampilkan total di JLabel
-    lblHarga.setText("Rp. " + totalSemua);
-}
 
     private void loadDashboardInfo() {
     try {
@@ -186,13 +186,13 @@ private void updateAreaRincian() {
         rs1.close();
         pst1.close();
 
-        // Total Income (semua total)
-        String sqlTotalIncome = "SELECT SUM(total) AS total_income FROM history";
-        PreparedStatement pst2 = conn.prepareStatement(sqlTotalIncome);
+        // Monthly Income (Total pemasukan bulan ini)
+        String sqlMonthlyIncome = "SELECT SUM(total) AS monthly_income FROM history WHERE MONTH(order_date) = MONTH(CURRENT_DATE()) AND YEAR(order_date) = YEAR(CURRENT_DATE())";
+        PreparedStatement pst2 = conn.prepareStatement(sqlMonthlyIncome);
         ResultSet rs2 = pst2.executeQuery();
         if (rs2.next()) {
-            int totalIncome = rs2.getInt("total_income");
-            lblTotalIncome.setText("Rp. " + totalIncome);
+            int monthlyIncome = rs2.getInt("monthly_income");
+            lblMonthlyIncome.setText("Rp. " + monthlyIncome);
         }
         rs2.close();
         pst2.close();
@@ -278,7 +278,7 @@ private void updateAreaRincian() {
         lblProdukTerjual = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
-        lblTotalIncome = new javax.swing.JLabel();
+        lblMonthlyIncome = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         lblTodayIncome = new javax.swing.JLabel();
@@ -725,16 +725,16 @@ private void updateAreaRincian() {
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setText("Monthly Income");
 
-        lblTotalIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        lblTotalIncome.setForeground(new java.awt.Color(255, 255, 255));
-        lblTotalIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTotalIncome.setText("Rp. 0");
+        lblMonthlyIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        lblMonthlyIncome.setForeground(new java.awt.Color(255, 255, 255));
+        lblMonthlyIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMonthlyIncome.setText("Rp. 0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblTotalIncome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblMonthlyIncome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
@@ -743,7 +743,7 @@ private void updateAreaRincian() {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel16)
                 .addGap(28, 28, 28)
-                .addComponent(lblTotalIncome)
+                .addComponent(lblMonthlyIncome)
                 .addContainerGap(42, Short.MAX_VALUE))
         );
 
@@ -1433,9 +1433,9 @@ private void updateAreaRincian() {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblHarga;
+    private javax.swing.JLabel lblMonthlyIncome;
     private javax.swing.JLabel lblProdukTerjual;
     private javax.swing.JLabel lblTodayIncome;
-    private javax.swing.JLabel lblTotalIncome;
     private javax.swing.JPanel navbarPanel;
     private javax.swing.JPanel panelDashboard;
     private javax.swing.JPanel panelHistory;
