@@ -291,7 +291,7 @@ public class Home extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(85, 63, 63));
+        jPanel1.setBackground(new java.awt.Color(15, 35, 63));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -318,7 +318,7 @@ public class Home extends javax.swing.JFrame {
 
         navbarPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        btnMenu.setBackground(new java.awt.Color(0, 0, 0));
+        btnMenu.setBackground(new java.awt.Color(15, 35, 63));
         btnMenu.setFont(new java.awt.Font("SF Pro Display", 1, 16)); // NOI18N
         btnMenu.setForeground(new java.awt.Color(255, 255, 255));
         btnMenu.setText("Menu");
@@ -328,7 +328,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnManage.setBackground(new java.awt.Color(0, 0, 0));
+        btnManage.setBackground(new java.awt.Color(15, 35, 63));
         btnManage.setFont(new java.awt.Font("SF Pro Display", 1, 16)); // NOI18N
         btnManage.setForeground(new java.awt.Color(255, 255, 255));
         btnManage.setText("Manage");
@@ -338,7 +338,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnDashboard.setBackground(new java.awt.Color(0, 0, 0));
+        btnDashboard.setBackground(new java.awt.Color(15, 35, 63));
         btnDashboard.setFont(new java.awt.Font("SF Pro Display", 1, 16)); // NOI18N
         btnDashboard.setForeground(new java.awt.Color(255, 255, 255));
         btnDashboard.setText("Dashboard");
@@ -348,7 +348,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnHistory.setBackground(new java.awt.Color(0, 0, 0));
+        btnHistory.setBackground(new java.awt.Color(15, 35, 63));
         btnHistory.setFont(new java.awt.Font("SF Pro Display", 1, 16)); // NOI18N
         btnHistory.setForeground(new java.awt.Color(255, 255, 255));
         btnHistory.setText("History");
@@ -387,9 +387,10 @@ public class Home extends javax.swing.JFrame {
 
         getContentPane().add(navbarPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 49, 190, 500));
 
-        panelMenu.setBackground(new java.awt.Color(245, 243, 243));
+        panelMenu.setBackground(new java.awt.Color(232, 238, 242));
 
         jLabel9.setFont(new java.awt.Font("SF Pro Display", 1, 20)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(15, 35, 63));
         jLabel9.setText("Menu");
 
         tblMenu.setModel(new javax.swing.table.DefaultTableModel(
@@ -414,7 +415,7 @@ public class Home extends javax.swing.JFrame {
         AreaRincian.setRows(5);
         jScrollPane4.setViewportView(AreaRincian);
 
-        btnAdd2.setBackground(new java.awt.Color(0, 0, 0));
+        btnAdd2.setBackground(new java.awt.Color(0, 88, 162));
         btnAdd2.setFont(new java.awt.Font("SF Pro Display", 0, 13)); // NOI18N
         btnAdd2.setForeground(new java.awt.Color(255, 255, 255));
         btnAdd2.setText("Add");
@@ -424,7 +425,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnRemove.setBackground(new java.awt.Color(0, 0, 0));
+        btnRemove.setBackground(new java.awt.Color(0, 88, 162));
         btnRemove.setFont(new java.awt.Font("SF Pro Display", 0, 13)); // NOI18N
         btnRemove.setForeground(new java.awt.Color(255, 255, 255));
         btnRemove.setText("Remove");
@@ -435,9 +436,11 @@ public class Home extends javax.swing.JFrame {
         });
 
         jLabel10.setFont(new java.awt.Font("SF Pro Display", 1, 20)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(15, 35, 63));
         jLabel10.setText("Details");
 
         jLabel11.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(15, 35, 63));
         jLabel11.setText("Total :");
 
         lblHarga.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
@@ -445,9 +448,10 @@ public class Home extends javax.swing.JFrame {
         lblHarga.setText("Rp. 0");
 
         jLabel13.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(15, 35, 63));
         jLabel13.setText("Pay :");
 
-        btnBayar.setBackground(new java.awt.Color(85, 63, 63));
+        btnBayar.setBackground(new java.awt.Color(0, 88, 162));
         btnBayar.setFont(new java.awt.Font("SF Pro Display", 0, 13)); // NOI18N
         btnBayar.setForeground(new java.awt.Color(255, 255, 255));
         btnBayar.setText("Confirm");
@@ -457,7 +461,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnClear2.setBackground(new java.awt.Color(0, 0, 0));
+        btnClear2.setBackground(new java.awt.Color(0, 88, 162));
         btnClear2.setFont(new java.awt.Font("SF Pro Display", 0, 13)); // NOI18N
         btnClear2.setForeground(new java.awt.Color(255, 255, 255));
         btnClear2.setText("Clear");
@@ -482,7 +486,7 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                    .addComponent(btnRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
                     .addComponent(btnAdd2, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
                     .addComponent(btnClear2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
@@ -530,12 +534,12 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(txtBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         tabPanel.addTab("tab1", panelMenu);
 
-        panelManage.setBackground(new java.awt.Color(245, 243, 243));
+        panelManage.setBackground(new java.awt.Color(232, 238, 242));
 
         tblProduk.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -556,7 +560,7 @@ public class Home extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblProduk);
 
-        btnAdd.setBackground(new java.awt.Color(0, 0, 0));
+        btnAdd.setBackground(new java.awt.Color(0, 88, 162));
         btnAdd.setForeground(new java.awt.Color(255, 255, 255));
         btnAdd.setText("Add");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -565,7 +569,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnUpdate.setBackground(new java.awt.Color(0, 0, 0));
+        btnUpdate.setBackground(new java.awt.Color(0, 88, 162));
         btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdate.setText("Update");
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
@@ -574,7 +578,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnClear.setBackground(new java.awt.Color(0, 0, 0));
+        btnClear.setBackground(new java.awt.Color(0, 88, 162));
         btnClear.setForeground(new java.awt.Color(255, 255, 255));
         btnClear.setText("Clear");
         btnClear.addActionListener(new java.awt.event.ActionListener() {
@@ -583,7 +587,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnDelete.setBackground(new java.awt.Color(0, 0, 0));
+        btnDelete.setBackground(new java.awt.Color(0, 88, 162));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Delete");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -601,6 +605,7 @@ public class Home extends javax.swing.JFrame {
         jLabel5.setText("Stock");
 
         jLabel6.setFont(new java.awt.Font("SF Pro Display", 1, 20)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(15, 35, 63));
         jLabel6.setText("Manage");
 
         javax.swing.GroupLayout panelManageLayout = new javax.swing.GroupLayout(panelManage);
@@ -682,21 +687,21 @@ public class Home extends javax.swing.JFrame {
 
         tabPanel.addTab("tab2", panelManage);
 
-        panelDashboard.setBackground(new java.awt.Color(245, 243, 243));
+        panelDashboard.setBackground(new java.awt.Color(232, 238, 242));
 
         jLabel8.setFont(new java.awt.Font("SF Pro Display", 1, 20)); // NOI18N
         jLabel8.setText("Dashboard");
 
-        jPanel2.setBackground(new java.awt.Color(85, 63, 63));
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel14.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setForeground(new java.awt.Color(0, 88, 162));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setText("Product Sold");
 
         lblProdukTerjual.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
-        lblProdukTerjual.setForeground(new java.awt.Color(255, 255, 255));
+        lblProdukTerjual.setForeground(new java.awt.Color(0, 88, 162));
         lblProdukTerjual.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblProdukTerjual.setText("0");
 
@@ -717,16 +722,16 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
-        jPanel3.setBackground(new java.awt.Color(85, 63, 63));
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setPreferredSize(new java.awt.Dimension(190, 130));
 
         jLabel16.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setForeground(new java.awt.Color(0, 88, 162));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setText("Monthly Income");
 
         lblMonthlyIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        lblMonthlyIncome.setForeground(new java.awt.Color(255, 255, 255));
+        lblMonthlyIncome.setForeground(new java.awt.Color(0, 88, 162));
         lblMonthlyIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblMonthlyIncome.setText("Rp. 0");
 
@@ -747,16 +752,16 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap(42, Short.MAX_VALUE))
         );
 
-        jPanel4.setBackground(new java.awt.Color(85, 63, 63));
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setPreferredSize(new java.awt.Dimension(190, 130));
 
         jLabel17.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setForeground(new java.awt.Color(0, 88, 162));
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel17.setText("Today Income");
 
         lblTodayIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        lblTodayIncome.setForeground(new java.awt.Color(255, 255, 255));
+        lblTodayIncome.setForeground(new java.awt.Color(0, 88, 162));
         lblTodayIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTodayIncome.setText("Rp. 0");
 
@@ -794,7 +799,7 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDashboardLayout.createSequentialGroup()
-                .addContainerGap(90, Short.MAX_VALUE)
+                .addContainerGap(146, Short.MAX_VALUE)
                 .addGroup(panelDashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnResetAll)
                     .addGroup(panelDashboardLayout.createSequentialGroup()
@@ -822,7 +827,7 @@ public class Home extends javax.swing.JFrame {
 
         tabPanel.addTab("tab3", panelDashboard);
 
-        panelHistory.setBackground(new java.awt.Color(245, 243, 243));
+        panelHistory.setBackground(new java.awt.Color(232, 238, 242));
 
         tblHistory.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
