@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import org.kelompok4.corndog.database.DatabaseConnection;
 
 /**
  *
@@ -47,7 +48,7 @@ public class Home extends javax.swing.JFrame {
     model.setRowCount(0); // Clear existing rows
 
     try {
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+        Connection conn = DatabaseConnection.getConnection();
         String query = "SELECT * FROM products";
         PreparedStatement stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
@@ -89,7 +90,7 @@ public class Home extends javax.swing.JFrame {
     model.setRowCount(0); // Clear existing rows
 
     try {
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+        Connection conn = DatabaseConnection.getConnection();
         String query = "SELECT * FROM products";
         PreparedStatement stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery();
@@ -131,7 +132,7 @@ public class Home extends javax.swing.JFrame {
         model.addColumn("Order Date");
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+            Connection conn = DatabaseConnection.getConnection();
             String query = "SELECT * FROM history ORDER BY order_date DESC";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -173,7 +174,7 @@ public class Home extends javax.swing.JFrame {
 
     private void loadDashboardInfo() {
     try {
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+        Connection conn = DatabaseConnection.getConnection();
 
         // Produk Terjual (jumlah transaksi)
         String sqlTotalTransaksi = "SELECT COUNT(*) AS total_transaksi FROM history";
@@ -902,7 +903,7 @@ public class Home extends javax.swing.JFrame {
          }
 
          try {
-             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+             Connection conn = DatabaseConnection.getConnection();
              String query = "DELETE FROM products WHERE product_id = ?";
              PreparedStatement pst = conn.prepareStatement(query);
              pst.setString(1, productID);
@@ -955,7 +956,7 @@ public class Home extends javax.swing.JFrame {
             int stok = Integer.parseInt(stokText);
 
             // Koneksi ke database
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+            Connection conn = DatabaseConnection.getConnection();
 
             // Cek apakah ID produk sudah ada
             String checkQuery = "SELECT product_id FROM products WHERE product_id = ?";
@@ -1059,7 +1060,7 @@ public class Home extends javax.swing.JFrame {
             int stock = Integer.parseInt(stockText);
 
             // Koneksi ke database
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+            Connection conn = DatabaseConnection.getConnection();
             String query = "UPDATE products SET product_name = ?, harga = ?, stok = ? WHERE product_id = ?";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, productName);
@@ -1103,7 +1104,7 @@ public class Home extends javax.swing.JFrame {
             int jumlah = pesanan.get(nama) - 1;
 
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+                Connection conn = DatabaseConnection.getConnection();
 
                 // Ambil stok sekarang dari database
                 String queryStok = "SELECT stok FROM products WHERE product_name = ?";
@@ -1157,7 +1158,7 @@ public class Home extends javax.swing.JFrame {
         int harga = Integer.parseInt(hargaStr);
 
         // Cek stok dari database
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+        Connection conn = DatabaseConnection.getConnection();
         String queryStok = "SELECT stok FROM products WHERE product_name = ?";
         PreparedStatement pst = conn.prepareStatement(queryStok);
         pst.setString(1, nama);
@@ -1214,7 +1215,7 @@ public class Home extends javax.swing.JFrame {
     private void btnClear2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClear2ActionPerformed
         // TODO add your handling code here:
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+            Connection conn = DatabaseConnection.getConnection();
 
             // Kembalikan stok setiap produk
             for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
@@ -1295,7 +1296,7 @@ public class Home extends javax.swing.JFrame {
         int kembalian = uangDibayar - totalSemua;
 
         // Simpan transaksi ke database
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+        Connection conn = DatabaseConnection.getConnection();
         String query = "INSERT INTO history (total) VALUES (?)";
         PreparedStatement pst = conn.prepareStatement(query);
         pst.setInt(1, totalSemua);
@@ -1337,8 +1338,7 @@ public class Home extends javax.swing.JFrame {
         // Jika user klik YES
         if (konfirmasi == JOptionPane.YES_OPTION) {
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
-
+                Connection conn = DatabaseConnection.getConnection();
                 // Hapus data dari semua tabel yang relevan
                 Statement stmt = conn.createStatement();
                 stmt.executeUpdate("DELETE FROM history");
