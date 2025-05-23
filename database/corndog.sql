@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 09 Bulan Mei 2025 pada 15.30
+-- Waktu pembuatan: 23 Bulan Mei 2025 pada 11.36
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -24,6 +24,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `history`
+--
+
+CREATE TABLE `history` (
+  `order_id` int(11) NOT NULL,
+  `total` int(11) NOT NULL,
+  `order_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `history`
+--
+
+INSERT INTO `history` (`order_id`, `total`, `order_date`) VALUES
+(15, 40000, '2025-05-22 14:35:14'),
+(16, 8000, '2025-05-22 14:36:20'),
+(17, 8000, '2025-05-22 14:36:34'),
+(18, 10000, '2025-05-22 15:21:25'),
+(19, 16000, '2025-05-22 15:38:27'),
+(20, 10000, '2025-05-22 15:44:58');
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `products`
 --
 
@@ -39,7 +63,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`product_id`, `product_name`, `harga`, `stok`) VALUES
-('FOOD001', 'Corndog', 5000, 10);
+('FOOD001', 'Corndog', 5000, 6),
+('FOOD002', 'Corndog Jumbo', 8000, 6);
 
 -- --------------------------------------------------------
 
@@ -67,6 +92,12 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`) VALUES
 --
 
 --
+-- Indeks untuk tabel `history`
+--
+ALTER TABLE `history`
+  ADD PRIMARY KEY (`order_id`);
+
+--
 -- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
@@ -77,6 +108,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
+
+--
+-- AUTO_INCREMENT untuk tabel `history`
+--
+ALTER TABLE `history`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
