@@ -5,15 +5,15 @@
 package org.kelompok4.corndog;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.kelompok4.corndog.database.DatabaseConnection;
 import org.kelompok4.corndog.util.CurrencyRenderer;
@@ -267,6 +267,7 @@ public class Home extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         lblTodayIncome = new javax.swing.JLabel();
         btnResetAll = new javax.swing.JButton();
+        btnEkspor = new javax.swing.JButton();
         panelHistory = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblHistory = new javax.swing.JTable();
@@ -774,6 +775,14 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
+        btnEkspor.setBackground(new java.awt.Color(153, 153, 153));
+        btnEkspor.setText("Ekspor");
+        btnEkspor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEksporActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelDashboardLayout = new javax.swing.GroupLayout(panelDashboard);
         panelDashboard.setLayout(panelDashboardLayout);
         panelDashboardLayout.setHorizontalGroup(
@@ -783,15 +792,17 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDashboardLayout.createSequentialGroup()
-                .addContainerGap(146, Short.MAX_VALUE)
-                .addGroup(panelDashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnResetAll)
+                .addContainerGap(90, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(69, 69, 69)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(62, 62, 62)
+                .addGroup(panelDashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(panelDashboardLayout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(69, 69, 69)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(62, 62, 62)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnEkspor, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnResetAll))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(79, 79, 79))
         );
         panelDashboardLayout.setVerticalGroup(
@@ -804,8 +815,10 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
-                .addComponent(btnResetAll, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addGroup(panelDashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnEkspor, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                    .addComponent(btnResetAll, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
                 .addGap(67, 67, 67))
         );
 
@@ -1346,6 +1359,93 @@ public class Home extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnResetAllActionPerformed
 
+    private void btnEksporActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEksporActionPerformed
+        // TODO add your handling code here:
+    int produkTerjual = 0;
+    int monthlyIncome = 0;
+    int todayIncome = 0;
+
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        // Ambil ringkasan dashboard
+        PreparedStatement pst1 = conn.prepareStatement("SELECT COUNT(*) AS total_transaksi FROM history");
+        ResultSet rs1 = pst1.executeQuery();
+        if (rs1.next()) produkTerjual = rs1.getInt("total_transaksi");
+        rs1.close();
+        pst1.close();
+
+        PreparedStatement pst2 = conn.prepareStatement(
+            "SELECT SUM(total) AS monthly_income FROM history WHERE MONTH(order_date) = MONTH(CURRENT_DATE()) AND YEAR(order_date) = YEAR(CURRENT_DATE())");
+        ResultSet rs2 = pst2.executeQuery();
+        if (rs2.next()) monthlyIncome = rs2.getInt("monthly_income");
+        rs2.close();
+        pst2.close();
+
+        PreparedStatement pst3 = conn.prepareStatement(
+            "SELECT SUM(total) AS today_income FROM history WHERE DATE(order_date) = CURDATE()");
+        ResultSet rs3 = pst3.executeQuery();
+        if (rs3.next()) todayIncome = rs3.getInt("today_income");
+        rs3.close();
+        pst3.close();
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Gagal ambil data dashboard: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+        return;
+    }
+    // Format date
+    String dateStr = new SimpleDateFormat("dd-MM-yyyy_HH-mm").format(new Date());
+
+    javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+    fileChooser.setDialogTitle("Save CSV File");
+    // Set file name with date
+    fileChooser.setSelectedFile(new java.io.File("export_history_dashboard_" + dateStr + ".csv"));
+
+    int userSelection = fileChooser.showSaveDialog(this);
+    if (userSelection != javax.swing.JFileChooser.APPROVE_OPTION) {
+        return; // User batal simpan
+    }
+
+    java.io.File fileToSave = fileChooser.getSelectedFile();
+
+    try (java.io.PrintWriter pw = new java.io.PrintWriter(fileToSave)) {
+        // Tulis ringkasan dashboard di bagian atas
+        pw.println("Product Sold," + produkTerjual);
+        pw.println("Monthly Income,Rp. " + monthlyIncome);
+        pw.println("Today Income,Rp. " + todayIncome);
+        pw.println(); // baris kosong sebagai pemisah
+
+        // Tulis header tabel
+        DefaultTableModel model = (DefaultTableModel) tblHistory.getModel();
+        for (int col = 0; col < model.getColumnCount(); col++) {
+            pw.print(model.getColumnName(col));
+            if (col < model.getColumnCount() - 1) pw.print(",");
+        }
+        pw.println();
+
+        // Tulis data tabel
+        for (int row = 0; row < model.getRowCount(); row++) {
+            for (int col = 0; col < model.getColumnCount(); col++) {
+                String cellData = model.getValueAt(row, col).toString();
+
+                // Jika data mengandung koma, quote string agar CSV valid
+                if (cellData.contains(",")) {
+                    cellData = "\"" + cellData + "\"";
+                }
+                pw.print(cellData);
+                if (col < model.getColumnCount() - 1) pw.print(",");
+            }
+            pw.println();
+        }
+
+        JOptionPane.showMessageDialog(this, "Data berhasil diekspor ke " + fileToSave.getAbsolutePath());
+
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Gagal menyimpan file CSV: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
+
+    }//GEN-LAST:event_btnEksporActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1391,6 +1491,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton btnClear2;
     private javax.swing.JButton btnDashboard;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEkspor;
     private javax.swing.JButton btnHistory;
     private javax.swing.JButton btnManage;
     private javax.swing.JButton btnMenu;
