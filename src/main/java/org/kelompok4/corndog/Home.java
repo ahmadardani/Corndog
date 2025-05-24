@@ -80,31 +80,28 @@ public class Home extends javax.swing.JFrame {
     // Fungsi buat nampilin tabel
     private void loadTable() {
     DefaultTableModel model = (DefaultTableModel) tblProduk.getModel();
-    model.setRowCount(0); // Clear existing rows
+    model.setRowCount(0); // Hapus semua baris sebelum mengisi ulang
 
-    try {
-        Connection conn = DatabaseConnection.getConnection();
-        String query = "SELECT * FROM products";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        ResultSet rs = stmt.executeQuery();
+    String query = "SELECT * FROM products";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
 
         while (rs.next()) {
-            Object[] row = new Object[4]; // Jumlah kolom dalam tabel
+            Object[] row = new Object[4];
             row[0] = rs.getString("product_id");
             row[1] = rs.getString("product_name");
-            row[2] = rs.getInt("harga");
-            row[3] = rs.getInt("stok");
+            row[2] = rs.getInt("price");
+            row[3] = rs.getInt("stock");
             model.addRow(row);
         }
 
-        rs.close();
-        stmt.close();
-        conn.close();
-        
-        tblProduk.getColumnModel().getColumn(1).setCellRenderer(new CurrencyRenderer()); //Menampilkan "Rp." di kolom tabel tanpa harus mengubah int ke string 
-        
+        // Render kolom harga dengan format Rupiah jika dibutuhkan
+        tblProduk.getColumnModel().getColumn(2).setCellRenderer(new CurrencyRenderer()); // Kolom harga (index ke-2)
+
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Gagal memuat data: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "Gagal memuat data: " + e.getMessage(), "Kesalahan", JOptionPane.ERROR_MESSAGE);
     }
 }
  
@@ -938,89 +935,77 @@ public class Home extends javax.swing.JFrame {
         // TODO add your handling code here:
         String productId = txtProdukID.getText().trim();
         String productName = txtProdukNama.getText().trim();
-        String hargaText = txtHarga.getText().trim();
-        String stokText = txtStok.getText().trim();
+        String priceText = txtHarga.getText().trim();
+        String stockText = txtStok.getText().trim();
 
         // Validasi input kosong
-        if (productId.isEmpty() || productName.isEmpty() || hargaText.isEmpty() || stokText.isEmpty()) {
+        if (productId.isEmpty() || productName.isEmpty() || priceText.isEmpty() || stockText.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Semua kolom harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
-            int harga = Integer.parseInt(hargaText);
-            int stok = Integer.parseInt(stokText);
+            int price = Integer.parseInt(priceText);
+            int stock = Integer.parseInt(stockText);
 
-            // Koneksi ke database
-            Connection conn = DatabaseConnection.getConnection();
+            try (Connection conn = DatabaseConnection.getConnection()) {
 
-            // Cek apakah ID produk sudah ada
-            String checkQuery = "SELECT product_id FROM products WHERE product_id = ?";
-            PreparedStatement checkPst = conn.prepareStatement(checkQuery);
-            checkPst.setString(1, productId);
-            ResultSet rs = checkPst.executeQuery();
+                // Cek apakah ID produk sudah ada
+                String checkIdQuery = "SELECT product_id FROM products WHERE product_id = ?";
+                try (PreparedStatement checkIdPst = conn.prepareStatement(checkIdQuery)) {
+                    checkIdPst.setString(1, productId);
+                    try (ResultSet rs = checkIdPst.executeQuery()) {
+                        if (rs.next()) {
+                            JOptionPane.showMessageDialog(this, "ID Produk sudah ada. Gunakan ID lain.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+                    }
+                }
 
-            if (rs.next()) {
-                JOptionPane.showMessageDialog(this, "ID Produk sudah ada. Gunakan ID lain.", "Peringatan", JOptionPane.WARNING_MESSAGE);
-                rs.close();
-                checkPst.close();
-                conn.close();
-                return;
+                // Cek apakah nama produk sudah ada
+                String checkNameQuery = "SELECT product_name FROM products WHERE product_name = ?";
+                try (PreparedStatement checkNamePst = conn.prepareStatement(checkNameQuery)) {
+                    checkNamePst.setString(1, productName);
+                    try (ResultSet rsName = checkNamePst.executeQuery()) {
+                        if (rsName.next()) {
+                            JOptionPane.showMessageDialog(this, "Nama produk sudah ada. Gunakan nama lain.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+                    }
+                }
+
+                // Insert data
+                String insertQuery = "INSERT INTO products (product_id, product_name, price, stock) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement insertPst = conn.prepareStatement(insertQuery)) {
+                    insertPst.setString(1, productId);
+                    insertPst.setString(2, productName);
+                    insertPst.setInt(3, price);
+                    insertPst.setInt(4, stock);
+                    insertPst.executeUpdate();
+                }
+
+                // Tambahkan ke tabel GUI
+                DefaultTableModel model = (DefaultTableModel) tblProduk.getModel();
+                model.addRow(new Object[]{productId, productName, price, stock});
+
+                JOptionPane.showMessageDialog(this, "Produk berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+                // Kosongkan input
+                txtProdukID.setText("");
+                txtProdukNama.setText("");
+                txtHarga.setText("");
+                txtStok.setText("");
+
+                // Refresh tabel menu
+                loadMenuTable();
             }
-
-            rs.close();
-            checkPst.close();
-            
-            // Cek apakah nama produk sudah ada
-            String checkNameQuery = "SELECT product_name FROM products WHERE product_name = ?";
-            PreparedStatement checkNamePst = conn.prepareStatement(checkNameQuery);
-            checkNamePst.setString(1, productName);
-            ResultSet rsName = checkNamePst.executeQuery();
-
-            if (rsName.next()) {
-                JOptionPane.showMessageDialog(this, "Nama produk sudah ada. Gunakan nama lain.", "Peringatan", JOptionPane.WARNING_MESSAGE);
-                rsName.close();
-                checkNamePst.close();
-                conn.close();
-                return;
-            }
-
-            rsName.close();
-            checkNamePst.close();
-
-            // Lanjutkan insert jika ID belum ada
-            String query = "INSERT INTO products (product_id, product_name, harga, stok) VALUES (?, ?, ?, ?)";
-            PreparedStatement pst = conn.prepareStatement(query);
-            pst.setString(1, productId);
-            pst.setString(2, productName);
-            pst.setInt(3, harga);
-            pst.setInt(4, stok);
-
-            pst.executeUpdate();
-
-            // Tambahkan ke tabel GUI
-            DefaultTableModel model = (DefaultTableModel) tblProduk.getModel();
-            model.addRow(new Object[]{productId, productName, harga, stok});
-
-            JOptionPane.showMessageDialog(this, "Produk berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-
-            // Kosongkan field input
-            txtProdukID.setText("");
-            txtProdukNama.setText("");
-            txtHarga.setText("");
-            txtStok.setText("");
-
-            // Memperbarui Menu
-            loadMenuTable();
-
-            pst.close();
-            conn.close();
 
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Harga dan stok harus berupa angka bulat.", "Peringatan", JOptionPane.WARNING_MESSAGE);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Gagal menambahkan produk: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Harga dan Stok harus berupa angka.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnManageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageActionPerformed
