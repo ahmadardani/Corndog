@@ -58,8 +58,8 @@ public class Home extends javax.swing.JFrame {
         while (rs.next()) {
             Object[] row = new Object[4]; // Jumlah kolom dalam tabel
             row[0] = rs.getString("product_name");
-            row[1] = rs.getInt("harga");
-            row[2] = rs.getInt("stok");
+            row[1] = rs.getInt("price");
+            row[2] = rs.getInt("stock");
             model.addRow(row);
         }
 
@@ -1079,44 +1079,50 @@ public class Home extends javax.swing.JFrame {
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
         // TODO add your handling code here:
-    String nama = txtProdukNama.getText();
+        String nama = txtProdukNama.getText().trim();
 
-        if (pesanan.containsKey(nama)) {
-            int jumlah = pesanan.get(nama) - 1;
-
-            try {
-                Connection conn = DatabaseConnection.getConnection();
-
-                // Ambil stok sekarang dari database
-                String queryStok = "SELECT stok FROM products WHERE product_name = ?";
-                PreparedStatement pstStok = conn.prepareStatement(queryStok);
-                pstStok.setString(1, nama);
-                ResultSet rs = pstStok.executeQuery();
-
-                if (rs.next()) {
-                    int stokSekarang = rs.getInt("stok");
-                    int stokBaru = stokSekarang + 1;
-
-                    // Update stok di database
-                    String queryUpdate = "UPDATE products SET stok = ? WHERE product_name = ?";
-                    PreparedStatement pstUpdate = conn.prepareStatement(queryUpdate);
-                    pstUpdate.setInt(1, stokBaru);
-                    pstUpdate.setString(2, nama);
-                    pstUpdate.executeUpdate();
-
-                    pstUpdate.close();
-                }
-
-                rs.close();
-                pstStok.close();
-                conn.close();
-
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Gagal update stok: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
-                ex.printStackTrace();
+            if (nama.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nama produk tidak boleh kosong.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                return;
             }
 
-            // Update pesanan map
+            if (!pesanan.containsKey(nama)) {
+                JOptionPane.showMessageDialog(this, "Produk belum ditambahkan ke pesanan.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            int jumlah = pesanan.get(nama) - 1;
+
+            try (Connection conn = DatabaseConnection.getConnection()) {
+                // Ambil stok sekarang
+                String queryStok = "SELECT stock FROM products WHERE product_name = ?";
+                try (PreparedStatement pstStok = conn.prepareStatement(queryStok)) {
+                    pstStok.setString(1, nama);
+                    try (ResultSet rs = pstStok.executeQuery()) {
+                        if (rs.next()) {
+                            int stokSekarang = rs.getInt("stock");
+                            int stokBaru = stokSekarang + 1;
+
+                            // Update stok
+                            String queryUpdate = "UPDATE products SET stock = ? WHERE product_name = ?";
+                            try (PreparedStatement pstUpdate = conn.prepareStatement(queryUpdate)) {
+                                pstUpdate.setInt(1, stokBaru);
+                                pstUpdate.setString(2, nama);
+                                pstUpdate.executeUpdate();
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Produk tidak ditemukan di database.", "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Gagal mengakses database: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+                return;
+            }
+
+            // Perbarui data pesanan
             if (jumlah > 0) {
                 pesanan.put(nama, jumlah);
             } else {
@@ -1125,60 +1131,67 @@ public class Home extends javax.swing.JFrame {
             }
 
             updateAreaRincian();
-            refreshMenuTableKeepSelection(); // refresh stok di tabel menu
-            loadTable(); // refresh stok di UI
-        }
+            refreshMenuTableKeepSelection();
+            loadTable();
     }//GEN-LAST:event_btnRemoveActionPerformed
 
     private void btnAdd2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdd2ActionPerformed
         // TODO add your handling code here:
-    String nama = txtProdukNama.getText();
-    String hargaStr = txtHarga.getText();
+        String nama = txtProdukNama.getText().trim();
+        String hargaStr = txtHarga.getText().trim();
 
-    try {
-        int harga = Integer.parseInt(hargaStr);
+        // Validasi input
+        if (nama.isEmpty() || hargaStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama dan harga produk harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        // Cek stok dari database
-        Connection conn = DatabaseConnection.getConnection();
-        String queryStok = "SELECT stok FROM products WHERE product_name = ?";
-        PreparedStatement pst = conn.prepareStatement(queryStok);
-        pst.setString(1, nama);
-        ResultSet rs = pst.executeQuery();
+        try {
+            int harga = Integer.parseInt(hargaStr);
 
-        if (rs.next()) {
-            int stokSekarang = rs.getInt("stok");
+            try (Connection conn = DatabaseConnection.getConnection()) {
+                // Ambil stok produk berdasarkan nama
+                String queryStok = "SELECT stock FROM products WHERE product_name = ?";
+                try (PreparedStatement pst = conn.prepareStatement(queryStok)) {
+                    pst.setString(1, nama);
+                    try (ResultSet rs = pst.executeQuery()) {
+                        if (rs.next()) {
+                            int stokSekarang = rs.getInt("stock");
 
-            if (stokSekarang > 0) {
-                // Kurangi stok
-                int stokBaru = stokSekarang - 1;
-                String queryUpdate = "UPDATE products SET stok = ? WHERE product_name = ?";
-                PreparedStatement pstUpdate = conn.prepareStatement(queryUpdate);
-                pstUpdate.setInt(1, stokBaru);
-                pstUpdate.setString(2, nama);
-                pstUpdate.executeUpdate();
+                            if (stokSekarang > 0) {
+                                // Kurangi stok
+                                int stokBaru = stokSekarang - 1;
+                                String queryUpdate = "UPDATE products SET stock = ? WHERE product_name = ?";
+                                try (PreparedStatement pstUpdate = conn.prepareStatement(queryUpdate)) {
+                                    pstUpdate.setInt(1, stokBaru);
+                                    pstUpdate.setString(2, nama);
+                                    pstUpdate.executeUpdate();
+                                }
 
-                // Tambahkan ke map pesanan
-                int jumlah = pesanan.getOrDefault(nama, 0) + 1;
-                pesanan.put(nama, jumlah);
-                hargaProduk.put(nama, harga); // Simpan harga untuk produk
-                
-                updateAreaRincian();
-                refreshMenuTableKeepSelection();
-                loadTable(); // Refresh tampilan tabel
-            } else {
-                JOptionPane.showMessageDialog(this, "Stok habis untuk produk ini.");
+                                // Tambahkan ke map pesanan
+                                int jumlah = pesanan.getOrDefault(nama, 0) + 1;
+                                pesanan.put(nama, jumlah);
+                                hargaProduk.put(nama, harga); // Simpan harga untuk produk
+
+                                updateAreaRincian(); // Perbarui tampilan pesanan
+                                refreshMenuTableKeepSelection(); // Jika ada logika khusus
+                                loadTable(); // Refresh tampilan tabel
+                            } else {
+                                JOptionPane.showMessageDialog(this, "Stok habis untuk produk ini.");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Produk tidak ditemukan di database.");
+                        }
+                    }
+                }
             }
 
-            rs.close();
-            pst.close();
-        } else {
-            JOptionPane.showMessageDialog(this, "Produk tidak ditemukan di database.");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Harga harus berupa angka.", "Kesalahan Input", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal mengakses database: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         }
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Gagal mengakses database: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
-        ex.printStackTrace();
-    }
-
     }//GEN-LAST:event_btnAdd2ActionPerformed
 
     private void tblMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMenuMouseClicked
@@ -1204,17 +1217,17 @@ public class Home extends javax.swing.JFrame {
                 int jumlahPesan = entry.getValue();
 
                 // Ambil stok saat ini
-                String querySelect = "SELECT stok FROM products WHERE product_name = ?";
+                String querySelect = "SELECT stock FROM products WHERE product_name = ?";
                 PreparedStatement pstSelect = conn.prepareStatement(querySelect);
                 pstSelect.setString(1, namaProduk);
                 ResultSet rs = pstSelect.executeQuery();
 
                 if (rs.next()) {
-                    int stokSekarang = rs.getInt("stok");
+                    int stokSekarang = rs.getInt("stock");
                     int stokBaru = stokSekarang + jumlahPesan;
 
                     // Update stok di database
-                    String queryUpdate = "UPDATE products SET stok = ? WHERE product_name = ?";
+                    String queryUpdate = "UPDATE products SET stock = ? WHERE product_name = ?";
                     PreparedStatement pstUpdate = conn.prepareStatement(queryUpdate);
                     pstUpdate.setInt(1, stokBaru);
                     pstUpdate.setString(2, namaProduk);
