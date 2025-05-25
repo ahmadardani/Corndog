@@ -777,7 +777,7 @@
                       <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="btnEkspor" min="-2" pref="72" max="-2" attributes="0"/>
+                              <Component id="btnExport" min="-2" pref="72" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="btnResetAll" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -807,7 +807,7 @@
                       </Group>
                       <EmptySpace pref="32" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btnEkspor" min="-2" pref="41" max="-2" attributes="0"/>
+                          <Component id="btnExport" min="-2" pref="41" max="-2" attributes="0"/>
                           <Component id="btnResetAll" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
@@ -950,7 +950,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel17" alignment="1" pref="190" max="32767" attributes="0"/>
-                      <Component id="lblTodayIncome" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblDailyIncome" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -959,7 +959,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel17" min="-2" pref="44" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblTodayIncome" min="-2" pref="52" max="-2" attributes="0"/>
+                          <Component id="lblDailyIncome" min="-2" pref="52" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -978,7 +978,7 @@
                     <Property name="text" type="java.lang.String" value="Daily Income"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblTodayIncome">
+                <Component class="javax.swing.JLabel" name="lblDailyIncome">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="SF Pro Display" size="18" style="0"/>
@@ -1003,15 +1003,15 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnResetAllActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnEkspor">
+            <Component class="javax.swing.JButton" name="btnExport">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="99" green="99" red="99" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Ekspor"/>
+                <Property name="text" type="java.lang.String" value="Export"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEksporActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportActionPerformed"/>
               </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="jPanel5">

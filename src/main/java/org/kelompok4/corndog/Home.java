@@ -158,49 +158,89 @@ public class Home extends javax.swing.JFrame {
     }
 
     private void loadDashboardInfo() {
-    try {
-        Connection conn = DatabaseConnection.getConnection();
+        try {
+            Connection conn = DatabaseConnection.getConnection();
 
-        // Produk Terjual (jumlah transaksi)
-        String sqlTotalTransaksi = "SELECT COUNT(*) AS total_transaksi FROM orders";
-        PreparedStatement pst1 = conn.prepareStatement(sqlTotalTransaksi);
-        ResultSet rs1 = pst1.executeQuery();
-        if (rs1.next()) {
-            int produkTerjual = rs1.getInt("total_transaksi");
-            lblDailyFoodsSales.setText(String.valueOf(produkTerjual));
+            // 1. Jumlah makanan terjual hari ini
+            String sqlDailyFoods = "SELECT SUM(od.quantity) AS daily_foods_sold " +
+                                   "FROM order_details od " +
+                                   "JOIN orders o ON od.order_id = o.order_id " +
+                                   "WHERE DATE(o.order_date) = CURDATE()";
+            PreparedStatement pst1 = conn.prepareStatement(sqlDailyFoods);
+            ResultSet rs1 = pst1.executeQuery();
+            if (rs1.next()) {
+                int dailyFoodsSold = rs1.getInt("daily_foods_sold");
+                lblDailyFoodsSales.setText(String.valueOf(dailyFoodsSold));
+            }
+            rs1.close();
+            pst1.close();
+
+            // 2. Jumlah makanan terjual bulan ini
+            String sqlMonthlyFoods = "SELECT SUM(od.quantity) AS monthly_foods_sold " +
+                                     "FROM order_details od " +
+                                     "JOIN orders o ON od.order_id = o.order_id " +
+                                     "WHERE MONTH(o.order_date) = MONTH(CURDATE()) " +
+                                     "AND YEAR(o.order_date) = YEAR(CURDATE())";
+            PreparedStatement pst2 = conn.prepareStatement(sqlMonthlyFoods);
+            ResultSet rs2 = pst2.executeQuery();
+            if (rs2.next()) {
+                int monthlyFoodsSold = rs2.getInt("monthly_foods_sold");
+                lblMonthlyFoodsSales.setText(String.valueOf(monthlyFoodsSold));
+            }
+            rs2.close();
+            pst2.close();
+
+            // 3. Jumlah transaksi hari ini
+            String sqlDailyTransactions = "SELECT COUNT(*) AS daily_transactions FROM orders WHERE DATE(order_date) = CURDATE()";
+            PreparedStatement pst3 = conn.prepareStatement(sqlDailyTransactions);
+            ResultSet rs3 = pst3.executeQuery();
+            if (rs3.next()) {
+                int dailyTrans = rs3.getInt("daily_transactions");
+                lblDailyTransactionCount.setText(String.valueOf(dailyTrans));
+            }
+            rs3.close();
+            pst3.close();
+
+            // 4. Jumlah transaksi bulan ini
+            String sqlMonthlyTransactions = "SELECT COUNT(*) AS monthly_transactions FROM orders WHERE MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
+            PreparedStatement pst4 = conn.prepareStatement(sqlMonthlyTransactions);
+            ResultSet rs4 = pst4.executeQuery();
+            if (rs4.next()) {
+                int monthlyTrans = rs4.getInt("monthly_transactions");
+                lblMonthlyTransactionCount.setText(String.valueOf(monthlyTrans));
+            }
+            rs4.close();
+            pst4.close();
+
+            // 5. Pendapatan hari ini
+            String sqlTodayIncome = "SELECT SUM(total) AS today_income FROM orders WHERE DATE(order_date) = CURDATE()";
+            PreparedStatement pst5 = conn.prepareStatement(sqlTodayIncome);
+            ResultSet rs5 = pst5.executeQuery();
+            if (rs5.next()) {
+                int todayIncome = rs5.getInt("today_income");
+                lblDailyIncome.setText("Rp. " + NumberFormat.getInstance(new Locale("id", "ID")).format(todayIncome));
+            }
+            rs5.close();
+            pst5.close();
+
+            // 6. Pendapatan bulan ini
+            String sqlMonthlyIncome = "SELECT SUM(total) AS monthly_income FROM orders WHERE MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
+            PreparedStatement pst6 = conn.prepareStatement(sqlMonthlyIncome);
+            ResultSet rs6 = pst6.executeQuery();
+            if (rs6.next()) {
+                int monthlyIncome = rs6.getInt("monthly_income");
+                lblMonthlyIncome.setText("Rp. " + NumberFormat.getInstance(new Locale("id", "ID")).format(monthlyIncome));
+            }
+            rs6.close();
+            pst6.close();
+
+            conn.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat data dashboard: " + ex.getMessage());
+            ex.printStackTrace();
         }
-        rs1.close();
-        pst1.close();
-
-        // Monthly Income (Total pemasukan bulan ini)
-        String sqlMonthlyIncome = "SELECT SUM(total) AS monthly_income FROM orders WHERE MONTH(order_date) = MONTH(CURRENT_DATE()) AND YEAR(order_date) = YEAR(CURRENT_DATE())";
-        PreparedStatement pst2 = conn.prepareStatement(sqlMonthlyIncome);
-        ResultSet rs2 = pst2.executeQuery();
-        if (rs2.next()) {
-            int monthlyIncome = rs2.getInt("monthly_income");
-            lblMonthlyIncome.setText("Rp. " + monthlyIncome);
-        }
-        rs2.close();
-        pst2.close();
-
-        // Today Income (berdasarkan tanggal hari ini)
-        String sqlTodayIncome = "SELECT SUM(total) AS today_income FROM orders WHERE DATE(order_date) = CURDATE()";
-        PreparedStatement pst3 = conn.prepareStatement(sqlTodayIncome);
-        ResultSet rs3 = pst3.executeQuery();
-        if (rs3.next()) {
-            int todayIncome = rs3.getInt("today_income");
-            lblTodayIncome.setText("Rp. " + todayIncome);
-        }
-        rs3.close();
-        pst3.close();
-
-        conn.close();
-
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Gagal memuat data dashboard: " + ex.getMessage());
-        ex.printStackTrace();
     }
-}
     private void refreshMenuTableKeepSelection() {
     // Simpan baris yang sedang dipilih
     int selectedRow = tblMenu.getSelectedRow();
@@ -267,9 +307,9 @@ public class Home extends javax.swing.JFrame {
         lblMonthlyIncome = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
-        lblTodayIncome = new javax.swing.JLabel();
+        lblDailyIncome = new javax.swing.JLabel();
         btnResetAll = new javax.swing.JButton();
-        btnEkspor = new javax.swing.JButton();
+        btnExport = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel20 = new javax.swing.JLabel();
         lblMonthlyFoodsSales = new javax.swing.JLabel();
@@ -756,17 +796,17 @@ public class Home extends javax.swing.JFrame {
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel17.setText("Daily Income");
 
-        lblTodayIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        lblTodayIncome.setForeground(new java.awt.Color(0, 88, 162));
-        lblTodayIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTodayIncome.setText("Rp. 0");
+        lblDailyIncome.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        lblDailyIncome.setForeground(new java.awt.Color(0, 88, 162));
+        lblDailyIncome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDailyIncome.setText("Rp. 0");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-            .addComponent(lblTodayIncome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblDailyIncome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -774,7 +814,7 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblTodayIncome, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblDailyIncome, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -786,11 +826,11 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnEkspor.setBackground(new java.awt.Color(153, 153, 153));
-        btnEkspor.setText("Ekspor");
-        btnEkspor.addActionListener(new java.awt.event.ActionListener() {
+        btnExport.setBackground(new java.awt.Color(153, 153, 153));
+        btnExport.setText("Export");
+        btnExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEksporActionPerformed(evt);
+                btnExportActionPerformed(evt);
             }
         });
 
@@ -901,7 +941,7 @@ public class Home extends javax.swing.JFrame {
                 .addGap(62, 62, 62)
                 .addGroup(panelDashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(panelDashboardLayout.createSequentialGroup()
-                        .addComponent(btnEkspor, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnResetAll))
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -925,7 +965,7 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(panelDashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnEkspor, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnResetAll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(67, 67, 67))
         );
@@ -1518,7 +1558,7 @@ public class Home extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnResetAllActionPerformed
 
-    private void btnEksporActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEksporActionPerformed
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
         // TODO add your handling code here:
     int totalTransaksi = 0;
     int monthlyIncome = 0;
@@ -1599,7 +1639,7 @@ public class Home extends javax.swing.JFrame {
         ex.printStackTrace();
     }
 
-    }//GEN-LAST:event_btnEksporActionPerformed
+    }//GEN-LAST:event_btnExportActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1646,7 +1686,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton btnClear2;
     private javax.swing.JButton btnDashboard;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnEkspor;
+    private javax.swing.JButton btnExport;
     private javax.swing.JButton btnHistory;
     private javax.swing.JButton btnManage;
     private javax.swing.JButton btnMenu;
@@ -1683,12 +1723,12 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblDailyFoodsSales;
+    private javax.swing.JLabel lblDailyIncome;
     private javax.swing.JLabel lblDailyTransactionCount;
     private javax.swing.JLabel lblHarga;
     private javax.swing.JLabel lblMonthlyFoodsSales;
     private javax.swing.JLabel lblMonthlyIncome;
     private javax.swing.JLabel lblMonthlyTransactionCount;
-    private javax.swing.JLabel lblTodayIncome;
     private javax.swing.JPanel navbarPanel;
     private javax.swing.JPanel panelDashboard;
     private javax.swing.JPanel panelHistory;
