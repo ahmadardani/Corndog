@@ -167,7 +167,7 @@ public class Home extends javax.swing.JFrame {
         ResultSet rs1 = pst1.executeQuery();
         if (rs1.next()) {
             int produkTerjual = rs1.getInt("total_transaksi");
-            lblProdukTerjual.setText(String.valueOf(produkTerjual));
+            lblDailyFoodsSales.setText(String.valueOf(produkTerjual));
         }
         rs1.close();
         pst1.close();
@@ -261,7 +261,7 @@ public class Home extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
-        lblProdukTerjual = new javax.swing.JLabel();
+        lblDailyFoodsSales = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         lblMonthlyIncome = new javax.swing.JLabel();
@@ -272,13 +272,13 @@ public class Home extends javax.swing.JFrame {
         btnEkspor = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel20 = new javax.swing.JLabel();
-        lblMonthlyTransactionCount = new javax.swing.JLabel();
+        lblMonthlyFoodsSales = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        lblMonthlyFoodsSales = new javax.swing.JLabel();
+        lblMonthlyTransactionCount = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
-        lblDailyFoodsSales = new javax.swing.JLabel();
+        lblDailyTransactionCount = new javax.swing.JLabel();
         panelHistory = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblHistory = new javax.swing.JTable();
@@ -691,21 +691,21 @@ public class Home extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setForeground(new java.awt.Color(255, 255, 255));
 
-        jLabel14.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
+        jLabel14.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(0, 88, 162));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel14.setText("Daily Transaction Count");
+        jLabel14.setText("Daily Foods Sales");
 
-        lblProdukTerjual.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
-        lblProdukTerjual.setForeground(new java.awt.Color(0, 88, 162));
-        lblProdukTerjual.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblProdukTerjual.setText("0");
+        lblDailyFoodsSales.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
+        lblDailyFoodsSales.setForeground(new java.awt.Color(0, 88, 162));
+        lblDailyFoodsSales.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDailyFoodsSales.setText("0");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblProdukTerjual, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblDailyFoodsSales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
@@ -714,7 +714,7 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblProdukTerjual, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblDailyFoodsSales, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -796,22 +796,22 @@ public class Home extends javax.swing.JFrame {
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel20.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
+        jLabel20.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(0, 88, 162));
         jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel20.setText("Monthly Transaction Count");
+        jLabel20.setText("Monthly Foods Sales");
 
-        lblMonthlyTransactionCount.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
-        lblMonthlyTransactionCount.setForeground(new java.awt.Color(0, 88, 162));
-        lblMonthlyTransactionCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblMonthlyTransactionCount.setText("0");
+        lblMonthlyFoodsSales.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
+        lblMonthlyFoodsSales.setForeground(new java.awt.Color(0, 88, 162));
+        lblMonthlyFoodsSales.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMonthlyFoodsSales.setText("0");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblMonthlyTransactionCount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblMonthlyFoodsSales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -819,28 +819,28 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblMonthlyTransactionCount, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblMonthlyFoodsSales, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel12.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(0, 88, 162));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setText("Monthly Foods Sales");
+        jLabel12.setText("Monthly Transaction Count");
 
-        lblMonthlyFoodsSales.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
-        lblMonthlyFoodsSales.setForeground(new java.awt.Color(0, 88, 162));
-        lblMonthlyFoodsSales.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblMonthlyFoodsSales.setText("0");
+        lblMonthlyTransactionCount.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
+        lblMonthlyTransactionCount.setForeground(new java.awt.Color(0, 88, 162));
+        lblMonthlyTransactionCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMonthlyTransactionCount.setText("0");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblMonthlyFoodsSales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblMonthlyTransactionCount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -848,28 +848,28 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblMonthlyFoodsSales, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblMonthlyTransactionCount, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel15.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
+        jLabel15.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(0, 88, 162));
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel15.setText("Daily Foods Sales");
+        jLabel15.setText("Daily Transaction Count");
 
-        lblDailyFoodsSales.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
-        lblDailyFoodsSales.setForeground(new java.awt.Color(0, 88, 162));
-        lblDailyFoodsSales.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblDailyFoodsSales.setText("0");
+        lblDailyTransactionCount.setFont(new java.awt.Font("SF Pro Display", 0, 36)); // NOI18N
+        lblDailyTransactionCount.setForeground(new java.awt.Color(0, 88, 162));
+        lblDailyTransactionCount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDailyTransactionCount.setText("0");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-            .addComponent(lblDailyFoodsSales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblDailyTransactionCount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -877,7 +877,7 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblDailyFoodsSales, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblDailyTransactionCount, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -1683,11 +1683,11 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblDailyFoodsSales;
+    private javax.swing.JLabel lblDailyTransactionCount;
     private javax.swing.JLabel lblHarga;
     private javax.swing.JLabel lblMonthlyFoodsSales;
     private javax.swing.JLabel lblMonthlyIncome;
     private javax.swing.JLabel lblMonthlyTransactionCount;
-    private javax.swing.JLabel lblProdukTerjual;
     private javax.swing.JLabel lblTodayIncome;
     private javax.swing.JPanel navbarPanel;
     private javax.swing.JPanel panelDashboard;

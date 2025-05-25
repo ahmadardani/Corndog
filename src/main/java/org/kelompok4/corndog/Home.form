@@ -837,7 +837,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lblProdukTerjual" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblDailyFoodsSales" alignment="1" max="32767" attributes="0"/>
                       <Component id="jLabel14" alignment="1" pref="190" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
@@ -847,7 +847,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel14" min="-2" pref="44" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblProdukTerjual" min="-2" pref="52" max="-2" attributes="0"/>
+                          <Component id="lblDailyFoodsSales" min="-2" pref="52" max="-2" attributes="0"/>
                           <EmptySpace pref="22" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -857,16 +857,16 @@
                 <Component class="javax.swing.JLabel" name="jLabel14">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="SF Pro Display" size="14" style="1"/>
+                      <Font name="SF Pro Display" size="18" style="1"/>
                     </Property>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="a2" green="58" red="0" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="Daily Transaction Count"/>
+                    <Property name="text" type="java.lang.String" value="Daily Foods Sales"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblProdukTerjual">
+                <Component class="javax.swing.JLabel" name="lblDailyFoodsSales">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="SF Pro Display" size="36" style="0"/>
@@ -1025,7 +1025,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel20" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblMonthlyTransactionCount" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblMonthlyFoodsSales" alignment="1" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -1034,59 +1034,6 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel20" min="-2" pref="44" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblMonthlyTransactionCount" min="-2" pref="52" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel20">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="SF Pro Display" size="14" style="1"/>
-                    </Property>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="a2" green="58" red="0" type="rgb"/>
-                    </Property>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="Monthly Transaction Count"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblMonthlyTransactionCount">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="SF Pro Display" size="36" style="0"/>
-                    </Property>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="a2" green="58" red="0" type="rgb"/>
-                    </Property>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="0"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="jPanel6">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-              </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel12" alignment="1" max="32767" attributes="0"/>
-                      <Component id="lblMonthlyFoodsSales" alignment="1" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel12" min="-2" pref="44" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="lblMonthlyFoodsSales" min="-2" pref="52" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -1094,7 +1041,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel12">
+                <Component class="javax.swing.JLabel" name="jLabel20">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="SF Pro Display" size="18" style="1"/>
@@ -1120,6 +1067,59 @@
                 </Component>
               </SubComponents>
             </Container>
+            <Container class="javax.swing.JPanel" name="jPanel6">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabel12" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblMonthlyTransactionCount" alignment="1" max="32767" attributes="0"/>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jLabel12" min="-2" pref="44" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lblMonthlyTransactionCount" min="-2" pref="52" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="jLabel12">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="SF Pro Display" size="14" style="1"/>
+                    </Property>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="a2" green="58" red="0" type="rgb"/>
+                    </Property>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="Monthly Transaction Count"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblMonthlyTransactionCount">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="SF Pro Display" size="36" style="0"/>
+                    </Property>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="a2" green="58" red="0" type="rgb"/>
+                    </Property>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="0"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
             <Container class="javax.swing.JPanel" name="jPanel8">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -1131,7 +1131,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel15" alignment="1" pref="190" max="32767" attributes="0"/>
-                      <Component id="lblDailyFoodsSales" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblDailyTransactionCount" alignment="1" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -1140,7 +1140,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel15" min="-2" pref="44" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblDailyFoodsSales" min="-2" pref="50" max="-2" attributes="0"/>
+                          <Component id="lblDailyTransactionCount" min="-2" pref="50" max="-2" attributes="0"/>
                           <EmptySpace pref="24" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -1150,16 +1150,16 @@
                 <Component class="javax.swing.JLabel" name="jLabel15">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="SF Pro Display" size="18" style="1"/>
+                      <Font name="SF Pro Display" size="14" style="1"/>
                     </Property>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="a2" green="58" red="0" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="Daily Foods Sales"/>
+                    <Property name="text" type="java.lang.String" value="Daily Transaction Count"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblDailyFoodsSales">
+                <Component class="javax.swing.JLabel" name="lblDailyTransactionCount">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="SF Pro Display" size="36" style="0"/>
