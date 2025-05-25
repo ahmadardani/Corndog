@@ -836,7 +836,7 @@ public class Home extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "Order ID", "Total", "Order Date"
+                "Order ID", "Total Transactions", "Order Date"
             }
         ));
         jScrollPane2.setViewportView(tblHistory);
