@@ -4,16 +4,21 @@
  */
 package org.kelompok4.corndog;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.NumberFormat;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import javax.swing.JFileChooser;
 
 import org.kelompok4.corndog.database.DatabaseConnection;
 import org.kelompok4.corndog.util.CurrencyRenderer;
@@ -112,28 +117,28 @@ public class Home extends javax.swing.JFrame {
         model.addColumn("Order Date");
 
         try {
-            Connection conn = DatabaseConnection.getConnection();
-            String query = "SELECT * FROM history ORDER BY order_date DESC";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+                Connection conn = DatabaseConnection.getConnection();
+                String query = "SELECT order_id, total, order_date FROM orders ORDER BY order_date DESC";
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
 
-            while (rs.next()) {
-                int orderId = rs.getInt("order_id");
-                int total = rs.getInt("total");
-                String orderDate = rs.getString("order_date");
+                while (rs.next()) {
+                    int orderId = rs.getInt("order_id");
+                    int total = rs.getInt("total");
+                    String orderDate = rs.getString("order_date");
 
-                model.addRow(new Object[]{orderId, "Rp. " + total, orderDate});
+                    model.addRow(new Object[]{orderId, "Rp. " + total, orderDate});
+                }
+
+                tblHistory.setModel(model); // tblHistory adalah JTable untuk riwayat
+                rs.close();
+                stmt.close();
+                conn.close();
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Gagal memuat data riwayat: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
             }
-
-            tblHistory.setModel(model); // tblHistory adalah nama JTable yang menampilkan riwayat
-            rs.close();
-            stmt.close();
-            conn.close();
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Gagal memuat data riwayat: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
     }    
     
     private void updateAreaRincian() {
@@ -157,7 +162,7 @@ public class Home extends javax.swing.JFrame {
         Connection conn = DatabaseConnection.getConnection();
 
         // Produk Terjual (jumlah transaksi)
-        String sqlTotalTransaksi = "SELECT COUNT(*) AS total_transaksi FROM history";
+        String sqlTotalTransaksi = "SELECT COUNT(*) AS total_transaksi FROM orders";
         PreparedStatement pst1 = conn.prepareStatement(sqlTotalTransaksi);
         ResultSet rs1 = pst1.executeQuery();
         if (rs1.next()) {
@@ -168,7 +173,7 @@ public class Home extends javax.swing.JFrame {
         pst1.close();
 
         // Monthly Income (Total pemasukan bulan ini)
-        String sqlMonthlyIncome = "SELECT SUM(total) AS monthly_income FROM history WHERE MONTH(order_date) = MONTH(CURRENT_DATE()) AND YEAR(order_date) = YEAR(CURRENT_DATE())";
+        String sqlMonthlyIncome = "SELECT SUM(total) AS monthly_income FROM orders WHERE MONTH(order_date) = MONTH(CURRENT_DATE()) AND YEAR(order_date) = YEAR(CURRENT_DATE())";
         PreparedStatement pst2 = conn.prepareStatement(sqlMonthlyIncome);
         ResultSet rs2 = pst2.executeQuery();
         if (rs2.next()) {
@@ -179,7 +184,7 @@ public class Home extends javax.swing.JFrame {
         pst2.close();
 
         // Today Income (berdasarkan tanggal hari ini)
-        String sqlTodayIncome = "SELECT SUM(total) AS today_income FROM history WHERE DATE(order_date) = CURDATE()";
+        String sqlTodayIncome = "SELECT SUM(total) AS today_income FROM orders WHERE DATE(order_date) = CURDATE()";
         PreparedStatement pst3 = conn.prepareStatement(sqlTodayIncome);
         ResultSet rs3 = pst3.executeQuery();
         if (rs3.next()) {
@@ -1042,7 +1047,7 @@ public class Home extends javax.swing.JFrame {
 
             // Koneksi ke database
             Connection conn = DatabaseConnection.getConnection();
-            String query = "UPDATE products SET product_name = ?, harga = ?, stok = ? WHERE product_id = ?";
+            String query = "UPDATE products SET product_name = ?, price = ?, stock = ? WHERE product_id = ?";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, productName);
             pst.setInt(2, price); // Gunakan setInt
@@ -1247,6 +1252,7 @@ public class Home extends javax.swing.JFrame {
         }
 
         // Kosongkan pesanan dan tampilan
+        txtBayar.setText("");
         pesanan.clear();
         hargaProduk.clear();
         AreaRincian.setText("");
@@ -1257,186 +1263,231 @@ public class Home extends javax.swing.JFrame {
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
         // TODO add your handling code here:
-    int totalSemua = 0;
+        int totalSemua = 0;
 
-    // Hitung total
-    for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
-        String nama = entry.getKey();
-        int jumlah = entry.getValue();
-        int harga = hargaProduk.getOrDefault(nama, 0);
-        totalSemua += jumlah * harga;
-    }
+        // Hitung total pesanan
+        for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
+            String nama = entry.getKey();
+            int jumlah = entry.getValue();
+            int harga = hargaProduk.getOrDefault(nama, 0);
+            totalSemua += jumlah * harga;
+        }
 
-    if (totalSemua == 0) {
-        JOptionPane.showMessageDialog(this, "Tidak ada pesanan untuk dibayar.");
-        return;
-    }
-
-    // Ambil input dari txtBayar
-    String bayarStr = txtBayar.getText().trim();
-    if (bayarStr.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Silakan masukkan jumlah uang yang dibayar.");
-        return;
-    }
-
-    try {
-        int uangDibayar = Integer.parseInt(bayarStr);
-
-        if (uangDibayar < totalSemua) {
-            JOptionPane.showMessageDialog(this, "Uang tidak cukup! Total yang harus dibayar: Rp. " + totalSemua);
+        if (totalSemua == 0) {
+            JOptionPane.showMessageDialog(this, "Tidak ada pesanan untuk dibayar.");
             return;
         }
 
-        int kembalian = uangDibayar - totalSemua;
+        String bayarStr = txtBayar.getText().trim();
+        if (bayarStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Silakan masukkan jumlah uang yang dibayar.");
+            return;
+        }
 
-        // Simpan transaksi ke database
-        Connection conn = DatabaseConnection.getConnection();
-        String query = "INSERT INTO history (total) VALUES (?)";
-        PreparedStatement pst = conn.prepareStatement(query);
-        pst.setInt(1, totalSemua);
-        pst.executeUpdate();
+        try {
+            int uangDibayar = Integer.parseInt(bayarStr);
 
-        JOptionPane.showMessageDialog(this, "Transaksi berhasil!\nKembalian: Rp. " + kembalian);
+            if (uangDibayar < totalSemua) {
+                JOptionPane.showMessageDialog(this, "Uang tidak cukup! Total yang harus dibayar: Rp. " + totalSemua);
+                return;
+            }
 
-        // Reset data & UI
-        pesanan.clear();
-        hargaProduk.clear();
-        AreaRincian.setText("");
-        lblHarga.setText("Rp. 0");
-        txtBayar.setText("");
-        loadMenuTable();
-        loadHistoryTable();
-        loadDashboardInfo();
-        
-        pst.close();
-        conn.close();
+            int kembalian = uangDibayar - totalSemua;
 
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Input uang tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Gagal menyimpan transaksi: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
-        ex.printStackTrace();
-    }
-    }//GEN-LAST:event_btnBayarActionPerformed
+            try (Connection conn = DatabaseConnection.getConnection()) {
+                conn.setAutoCommit(false); // Mulai transaksi
 
-    private void btnResetAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetAllActionPerformed
-            // TODO add your handling code here:
-               // Tampilkan dialog konfirmasi
-        int konfirmasi = JOptionPane.showConfirmDialog(
-                this,
-                "Apakah Anda yakin ingin menghapus semua data di database?",
-                "Konfirmasi Reset Data",
-                JOptionPane.YES_NO_OPTION
-        );
+                // Simpan ke tabel orders
+                String insertOrder = "INSERT INTO orders (total) VALUES (?)";
+                int orderId;
+                try (PreparedStatement pstOrder = conn.prepareStatement(insertOrder, Statement.RETURN_GENERATED_KEYS)) {
+                    pstOrder.setInt(1, totalSemua);
+                    pstOrder.executeUpdate();
 
-        // Jika user klik YES
-        if (konfirmasi == JOptionPane.YES_OPTION) {
-            try {
-                Connection conn = DatabaseConnection.getConnection();
-                // Hapus data dari semua tabel yang relevan
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate("DELETE FROM history");
-                stmt.executeUpdate("DELETE FROM products");
-                // Jika ada tabel lain, tambahkan juga perintah delete-nya
+                    ResultSet generatedKeys = pstOrder.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        orderId = generatedKeys.getInt(1);
+                    } else {
+                        conn.rollback();
+                        throw new SQLException("Gagal mengambil ID transaksi.");
+                    }
+                }
 
-                stmt.close();
-                conn.close();
+                // Siapkan statement untuk cari product_id
+                String sqlFindId = "SELECT product_id FROM products WHERE product_name = ?";
+                try (PreparedStatement pstFind = conn.prepareStatement(sqlFindId);
+                     PreparedStatement pstDetail = conn.prepareStatement(
+                         "INSERT INTO order_details (order_id, product_id, quantity, subtotal) VALUES (?, ?, ?, ?)")) {
 
-                JOptionPane.showMessageDialog(this, "Semua data berhasil dihapus.");
+                    for (Map.Entry<String, Integer> entry : pesanan.entrySet()) {
+                        String namaProduk = entry.getKey();
+                        int jumlah = entry.getValue();
+                        int harga = hargaProduk.getOrDefault(namaProduk, 0);
+                        int subtotal = jumlah * harga;
 
-                // Refresh UI jika diperlukan
+                        // Cari product_id berdasarkan namaProduk
+                        pstFind.setString(1, namaProduk);
+                        try (ResultSet rsFind = pstFind.executeQuery()) {
+                            if (rsFind.next()) {
+                                String productId = rsFind.getString("product_id");
+
+                                pstDetail.setInt(1, orderId);
+                                pstDetail.setString(2, productId);
+                                pstDetail.setInt(3, jumlah);
+                                pstDetail.setInt(4, subtotal);
+                                pstDetail.addBatch();
+                            } else {
+                                conn.rollback();
+                                throw new SQLException("Produk tidak ditemukan: " + namaProduk);
+                            }
+                        }
+                    }
+                    pstDetail.executeBatch();
+                }
+
+                conn.commit();
+
+                JOptionPane.showMessageDialog(this, "Transaksi berhasil!\nKembalian: Rp. " + kembalian);
+
+                // Reset UI
+                pesanan.clear();
+                hargaProduk.clear();
+                AreaRincian.setText("");
+                lblHarga.setText("Rp. 0");
+                txtBayar.setText("");
                 loadMenuTable();
                 loadTable();
                 loadHistoryTable();
                 loadDashboardInfo();
+
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Input uang tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal menyimpan transaksi: " + ex.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_btnBayarActionPerformed
+
+    private void btnResetAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetAllActionPerformed
+        // TODO add your handling code here:
+        // Tampilkan dialog konfirmasi kepada user
+        int konfirmasi = JOptionPane.showConfirmDialog(
+            this,
+            "Apakah Anda yakin ingin menghapus semua data di database?",
+            "Konfirmasi Reset Data",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            try (Connection conn = DatabaseConnection.getConnection();
+                 Statement stmt = conn.createStatement()) {
+
+                // Nonaktifkan foreign key sementara (jika perlu)
+                stmt.executeUpdate("SET FOREIGN_KEY_CHECKS = 0");
+
+                // Hapus data dari tabel terkait
+                stmt.executeUpdate("DELETE FROM order_details");
+                stmt.executeUpdate("DELETE FROM orders");
+                stmt.executeUpdate("DELETE FROM products");
+
+                // Aktifkan kembali foreign key
+                stmt.executeUpdate("SET FOREIGN_KEY_CHECKS = 1");
+
+                JOptionPane.showMessageDialog(this, "Semua data berhasil dihapus.");
+
+                // Refresh UI
+                loadMenuTable();       // Perbarui tabel menu
+                loadTable();           // Perbarui tabel utama
+                loadHistoryTable();    // Perbarui riwayat transaksi
+                loadDashboardInfo();   // Perbarui ringkasan dashboard
 
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Gagal menghapus data: " + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }
+
     }//GEN-LAST:event_btnResetAllActionPerformed
 
     private void btnEksporActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEksporActionPerformed
         // TODO add your handling code here:
-    int produkTerjual = 0;
+    int totalTransaksi = 0;
     int monthlyIncome = 0;
     int todayIncome = 0;
 
     try (Connection conn = DatabaseConnection.getConnection()) {
-        // Ambil ringkasan dashboard
-        PreparedStatement pst1 = conn.prepareStatement("SELECT COUNT(*) AS total_transaksi FROM history");
+        PreparedStatement pst1 = conn.prepareStatement("SELECT COUNT(*) AS total_transaksi FROM orders");
         ResultSet rs1 = pst1.executeQuery();
-        if (rs1.next()) produkTerjual = rs1.getInt("total_transaksi");
-        rs1.close();
-        pst1.close();
+        if (rs1.next()) totalTransaksi = rs1.getInt("total_transaksi");
+        rs1.close(); pst1.close();
 
         PreparedStatement pst2 = conn.prepareStatement(
-            "SELECT SUM(total) AS monthly_income FROM history WHERE MONTH(order_date) = MONTH(CURRENT_DATE()) AND YEAR(order_date) = YEAR(CURRENT_DATE())");
+            "SELECT SUM(total) AS monthly_income FROM orders WHERE MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())");
         ResultSet rs2 = pst2.executeQuery();
         if (rs2.next()) monthlyIncome = rs2.getInt("monthly_income");
-        rs2.close();
-        pst2.close();
+        rs2.close(); pst2.close();
 
         PreparedStatement pst3 = conn.prepareStatement(
-            "SELECT SUM(total) AS today_income FROM history WHERE DATE(order_date) = CURDATE()");
+            "SELECT SUM(total) AS today_income FROM orders WHERE DATE(order_date) = CURDATE()");
         ResultSet rs3 = pst3.executeQuery();
         if (rs3.next()) todayIncome = rs3.getInt("today_income");
-        rs3.close();
-        pst3.close();
-
+        rs3.close(); pst3.close();
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Gagal ambil data dashboard: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         ex.printStackTrace();
         return;
     }
-    // Format date
+
     String dateStr = new SimpleDateFormat("dd-MM-yyyy_HH-mm").format(new Date());
+    NumberFormat formatter = NumberFormat.getInstance(new Locale("id", "ID"));
 
-    javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
-    fileChooser.setDialogTitle("Save CSV File");
-    // Set file name with date
-    fileChooser.setSelectedFile(new java.io.File("export_history_dashboard_" + dateStr + ".csv"));
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Simpan File CSV");
+    fileChooser.setSelectedFile(new File("export_history_dashboard_" + dateStr + ".csv"));
 
-    int userSelection = fileChooser.showSaveDialog(this);
-    if (userSelection != javax.swing.JFileChooser.APPROVE_OPTION) {
-        return; // User batal simpan
+    if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) return;
+
+    File fileToSave = fileChooser.getSelectedFile();
+    if (fileToSave.exists()) {
+        int confirm = JOptionPane.showConfirmDialog(this, "File sudah ada. Timpa?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) return;
     }
 
-    java.io.File fileToSave = fileChooser.getSelectedFile();
+    try (PrintWriter pw = new PrintWriter(fileToSave);
+         Connection conn = DatabaseConnection.getConnection()) {
 
-    try (java.io.PrintWriter pw = new java.io.PrintWriter(fileToSave)) {
-        // Tulis ringkasan dashboard di bagian atas
-        pw.println("Product Sold," + produkTerjual);
-        pw.println("Monthly Income,Rp. " + monthlyIncome);
-        pw.println("Today Income,Rp. " + todayIncome);
-        pw.println(); // baris kosong sebagai pemisah
-
-        // Tulis header tabel
-        DefaultTableModel model = (DefaultTableModel) tblHistory.getModel();
-        for (int col = 0; col < model.getColumnCount(); col++) {
-            pw.print(model.getColumnName(col));
-            if (col < model.getColumnCount() - 1) pw.print(",");
-        }
+        // Tulis ringkasan
+        pw.println("Total Transaksi," + totalTransaksi);
+        pw.println("Pendapatan Bulan Ini,Rp. " + formatter.format(monthlyIncome));
+        pw.println("Pendapatan Hari Ini,Rp. " + formatter.format(todayIncome));
         pw.println();
 
-        // Tulis data tabel
-        for (int row = 0; row < model.getRowCount(); row++) {
-            for (int col = 0; col < model.getColumnCount(); col++) {
-                String cellData = model.getValueAt(row, col).toString();
+        // Header detail transaksi
+        pw.println("Order ID,Tanggal Order,Nama Makanan,Jumlah,Subtotal");
 
-                // Jika data mengandung koma, quote string agar CSV valid
-                if (cellData.contains(",")) {
-                    cellData = "\"" + cellData + "\"";
-                }
-                pw.print(cellData);
-                if (col < model.getColumnCount() - 1) pw.print(",");
-            }
-            pw.println();
+        String sql = "SELECT o.order_id, o.order_date, p.product_name, od.quantity, od.subtotal " +
+                     "FROM orders o " +
+                     "JOIN order_details od ON o.order_id = od.order_id " +
+                     "JOIN products p ON od.product_id = p.product_id " +
+                     "ORDER BY o.order_id";
+
+        PreparedStatement pst = conn.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            int orderId = rs.getInt("order_id");
+            String orderDate = rs.getString("order_date");
+            String productName = rs.getString("product_name");
+            int qty = rs.getInt("quantity");
+            int subtotal = rs.getInt("subtotal");
+
+            pw.println(orderId + "," + orderDate + ",\"" + productName + "\"," + qty + "," + subtotal);
         }
+        rs.close(); pst.close();
 
-        JOptionPane.showMessageDialog(this, "Data berhasil diekspor ke " + fileToSave.getAbsolutePath());
-
+        JOptionPane.showMessageDialog(this, "Data berhasil diekspor ke: \n" + fileToSave.getAbsolutePath());
     } catch (Exception ex) {
         JOptionPane.showMessageDialog(this, "Gagal menyimpan file CSV: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         ex.printStackTrace();
