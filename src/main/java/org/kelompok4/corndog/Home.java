@@ -243,18 +243,26 @@ public class Home extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
-    private void refreshMenuTableKeepSelection() {
-    // Simpan baris yang sedang dipilih
-    int selectedRow = tblMenu.getSelectedRow();
+    
+        private void refreshMenuTableKeepSelection() {
+            // Simpan baris yang sedang dipilih
+            int selectedRow = tblMenu.getSelectedRow();
 
-    // Reload data ke tabel
-    loadMenuTable();
+            // Reload data ke tabel
+            loadMenuTable();
 
-    // Set ulang selection jika sebelumnya ada yang dipilih dan masih valid
-    if (selectedRow >= 0 && selectedRow < tblMenu.getRowCount()) {
-        tblMenu.setRowSelectionInterval(selectedRow, selectedRow);
-    }
-}
+            // Set ulang selection jika sebelumnya ada yang dipilih dan masih valid
+            if (selectedRow >= 0 && selectedRow < tblMenu.getRowCount()) {
+                tblMenu.setRowSelectionInterval(selectedRow, selectedRow);
+            }
+        }
+        
+        private void clearAllText() {    
+            txtProdukID.setText("");
+            txtProdukNama.setText("");
+            txtHarga.setText("");
+            txtStok.setText("");
+        }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -1062,10 +1070,7 @@ public class Home extends javax.swing.JFrame {
                  loadMenuTable(); // Memperbarui Menu
 
                  // Kosongkan semua input
-                 txtProdukID.setText("");
-                 txtProdukNama.setText("");
-                 txtHarga.setText("");
-                 txtStok.setText("");
+                 clearAllText();
              } else {
                  JOptionPane.showMessageDialog(this, "Produk dengan ID tersebut tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
              }
@@ -1078,10 +1083,7 @@ public class Home extends javax.swing.JFrame {
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         // TODO add your handling code here:
         // Clear all text fields
-        txtProdukID.setText("");
-        txtProdukNama.setText("");
-        txtHarga.setText("");
-        txtStok.setText("");
+        clearAllText();
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
@@ -1144,10 +1146,7 @@ public class Home extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Produk berhasil ditambahkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
 
                 // Kosongkan input
-                txtProdukID.setText("");
-                txtProdukNama.setText("");
-                txtHarga.setText("");
-                txtStok.setText("");
+                clearAllText();
 
                 // Refresh tabel menu
                 loadMenuTable();
@@ -1165,10 +1164,7 @@ public class Home extends javax.swing.JFrame {
         // TODO add your handling code here:
         tabPanel.setSelectedComponent(panelManage);
         btnClear2ActionPerformed(evt);
-        txtProdukID.setText("");
-        txtProdukNama.setText("");
-        txtHarga.setText("");
-        txtStok.setText("");
+        clearAllText();
     }//GEN-LAST:event_btnManageActionPerformed
 
     private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
