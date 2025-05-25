@@ -4,12 +4,14 @@
  */
 package org.kelompok4.corndog;
 
+import org.kelompok4.corndog.util.PasswordUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import org.kelompok4.corndog.database.DatabaseConnection;
 
 /**
  *
@@ -193,7 +195,7 @@ public class Register extends javax.swing.JFrame {
 
         // Simpan ke database
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/corndog", "root", "");
+            Connection conn = DatabaseConnection.getConnection();
             String query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, username);
