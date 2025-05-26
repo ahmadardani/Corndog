@@ -81,9 +81,6 @@ public class Home extends javax.swing.JFrame {
     }
     
 }
-    
-    
-    
     // Fungsi buat nampilin tabel
     private void loadTable() {
     DefaultTableModel model = (DefaultTableModel) tblProduk.getModel();
