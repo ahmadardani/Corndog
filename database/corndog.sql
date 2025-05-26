@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 25 Bulan Mei 2025 pada 11.25
+-- Waktu pembuatan: 26 Bulan Mei 2025 pada 11.02
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -38,7 +38,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_id`, `total`, `order_date`) VALUES
-(7, 25000, '2025-05-25 17:03:31');
+(9, 26000, '2025-05-25 20:47:05'),
+(10, 26000, '2025-05-25 20:54:11');
 
 -- --------------------------------------------------------
 
@@ -59,9 +60,10 @@ CREATE TABLE `order_details` (
 --
 
 INSERT INTO `order_details` (`detail_id`, `order_id`, `product_id`, `quantity`, `subtotal`) VALUES
-(7, 7, 'FOOD001', 1, 10000),
-(8, 7, 'FOOD003', 1, 12000),
-(9, 7, 'FOOD002', 1, 3000);
+(11, 9, 'FOOD001', 2, 20000),
+(12, 9, 'FOOD002', 2, 6000),
+(13, 10, 'FOOD001', 2, 20000),
+(14, 10, 'FOOD002', 2, 6000);
 
 -- --------------------------------------------------------
 
@@ -81,9 +83,16 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`product_id`, `product_name`, `price`, `stock`) VALUES
-('FOOD001', 'Corndog Full Sosis', 10000, 9),
-('FOOD002', 'Corndog Mini Size', 3000, 9),
-('FOOD003', 'Corndog Mix Sosis & Mozzarella', 12000, 9);
+('FOOD001', 'Corndog Full Sosis', 10000, 10),
+('FOOD002', 'Corndog Mini Size', 3000, 10),
+('FOOD003', 'Corndog Mix Sosis & Mozzarella', 12000, 10),
+('FOOD004', 'Corndog Mix Sosis & Mozzarella Mini Size', 7000, 10),
+('FOOD005', 'Corndog Full Mozzarella', 14000, 10),
+('FOOD006', 'Corndog Full Mozzarella Mini Size', 8000, 10),
+('FOOD007', 'Corndog Full Pisang Topping Cokelat', 5000, 10),
+('FOOD008', 'Corndog Full Pisang Topping Tiramisu', 5000, 10),
+('FOOD009', 'Corndog Full Pisang Topping Greentea', 5000, 10),
+('FOOD010', 'Corndog Full Pisang Topping Stroberi', 5000, 10);
 
 -- --------------------------------------------------------
 
@@ -104,7 +113,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`) VALUES
-(1, 'admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '2025-05-24 06:49:17');
+(1, 'admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '2025-05-24 06:49:17'),
+(2, 'admin2', 'admin2@gmail.com', '1c142b2d01aa34e9a36bde480645a57fd69e14155dacfab5a3f9257b77fdc8d8', '2025-05-25 11:52:12');
 
 --
 -- Indexes for dumped tables
@@ -146,19 +156,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
