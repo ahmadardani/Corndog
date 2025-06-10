@@ -456,7 +456,9 @@ public class Home extends javax.swing.JFrame {
         jScrollPane3.setViewportView(tblMenu);
 
         AreaRincian.setColumns(20);
+        AreaRincian.setLineWrap(true);
         AreaRincian.setRows(5);
+        AreaRincian.setWrapStyleWord(true);
         jScrollPane4.setViewportView(AreaRincian);
 
         btnAdd2.setBackground(new java.awt.Color(0, 88, 162));
